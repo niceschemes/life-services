@@ -7,17 +7,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// conexão com banco (vamos usar depois, pode deixar assim por enquanto)
-mongoose.connect('mongodb://127.0.0.1:27017/life_services')
-  .then(() => console.log('Banco conectado'))
-  .catch(err => console.log('Erro no banco:', err));
+// conexão com banco (CORRIGIDO PARA PRODUÇÃO)
+mongoose.connect(process.env.MONGO_URL)
+  .then(() => console.log('✅ Mongo conectado'))
+  .catch(err => console.log('❌ Erro no Mongo:', err));
 
 // rota teste
 app.get('/', (req, res) => {
   res.send('Life Services API rodando 🚀');
 });
 
-// rotas de clientes (ainda vamos criar)
+// rotas de clientes
 const clientesRoutes = require('./routes/clientes');
 app.use('/clientes', clientesRoutes);
 

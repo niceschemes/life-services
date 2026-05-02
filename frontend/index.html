@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Life Services</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f4f4;
+      text-align: center;
+    }
+
+    input {
+      padding: 10px;
+      margin: 5px;
+      width: 200px;
+    }
+
+    button {
+      padding: 10px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: white;
+      margin: 5px auto;
+      padding: 10px;
+      width: 350px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+     li div {
+    display: flex;
+    gap: 10px;
+  }
+
+  /* opcional (cores diferentes) */
+  li button:first-child {
+    background: #2196F3;
+  }
+
+  li button:last-child {
+    background: #f44336;
+  }
+  
+  </style>
+
+</head>
+<body>
+
+<h1>Life Services</h1>
+
+<h2>Cadastro de Cliente</h2>
+
+<input id="nome" placeholder="Nome"><br>
+<input id="telefone" placeholder="Telefone"><br>
+<input id="endereco" placeholder="Endereço"><br>
+
+<button onclick="cadastrar()">Cadastrar</button>
+
+<h2>Clientes</h2>
+<ul id="lista"></ul>
+
+<script>
+async function cadastrar() {
+  const nome = document.getElementById('nome').value;
+  const telefone = document.getElementById('telefone').value;
+  const endereco = document.getElementById('endereco').value;
+
+  await fetch('http://localhost:3000/clientes', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ nome, telefone, endereco })
+  });
+
+  // limpar campos
+  document.getElementById('nome').value = '';
+  document.getElementById('telefone').value = '';
+  document.getElementById('endereco').value = '';
+
+  carregar();
+}
+
+async function deletar(id) {
+  await fetch(`http://localhost:3000/clientes/${id}`, {
+    method: 'DELETE'
+  });
+
+  carregar();
+}
+
+async function carregar() {
+  const res = await fetch('http://localhost:3000/clientes');
+  const clientes = await res.json();
+
+  const lista = document.getElementById('lista');
+  lista.innerHTML = '';
+
+  clientes.forEach(c => {
+    const li = document.createElement('li');
+
+ li.innerHTML = `
+  <span>${c.nome} | ${c.telefone} | ${c.endereco}</span>
+  <div>
+    <button onclick="editar('${c._id}')">Editar</button>
+    <button onclick="deletar('${c._id}')">Excluir</button>
+  </div>
+`;
+
+    lista.appendChild(li);
+  });
+}
+async function editar(id) {
+  const novoNome = prompt("Novo nome:");
+  const novoTelefone = prompt("Novo telefone:");
+  const novoEndereco = prompt("Novo endereço:");
+
+  await fetch(`http://localhost:3000/clientes/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      nome: novoNome,
+      telefone: novoTelefone,
+      endereco: novoEndereco
+    })
+  });
+
+  carregar();
+}
+
+carregar();
+</script>
+
+</body>
+</html>

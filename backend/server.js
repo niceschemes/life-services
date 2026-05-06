@@ -1,4 +1,4 @@
- const path = require('path');
+const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -25,6 +25,13 @@ mongoose.connect(process.env.MONGO_URL)
 ========================= */
 const clientesRoutes = require('./routes/clientes');
 app.use('/clientes', clientesRoutes);
+
+/* =========================
+   ROTA FRONTEND (IMPORTANTE)
+========================= */
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+});
 
 /* =========================
    PORTA

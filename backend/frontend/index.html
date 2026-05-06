@@ -3,73 +3,187 @@
 <head>
   <meta charset="utf-8">
   <title>Life Services</title>
-  
+
   <link rel="icon" type="image/png" href="favicon.png">
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      margin: 0;
-      padding: 20px;
-    }
+:root {
+  --bg: #0f172a;
+  --sidebar: #020617;
+  --card: #111827;
+  --border: #1f2937;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --primary: #2563eb;
+  --danger: #dc2626;
+  --warning: #f59e0b;
+}
 
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    h1, h2 { text-align: center; }
+body {
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
+/* layout */
+.layout {
+  display: flex;
+  height: 100vh;
+}
 
-    button {
-      padding: 10px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+/* sidebar */
+.sidebar {
+  width: 220px;
+  background: var(--sidebar);
+  padding: 20px;
+  border-right: 1px solid var(--border);
+}
 
-    .btn-salvar {
-      width: 100%;
-      background: #007bff;
-      color: white;
-      margin-top: 10px;
-    }
+.sidebar h1 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
 
-    .btn-edit { background: #ffc107; }
-    .btn-delete { background: #dc3545; color: white; }
+.sidebar button {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--muted);
+  text-align: left;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
-    li {
-      background: #f9f9f9;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 6px;
-      display: flex;
-      justify-content: space-between;
-    }
+.sidebar button:hover {
+  background: var(--card);
+  color: var(--text);
+}
 
-    .top-bar { margin-bottom: 10px; }
+/* main */
+.main {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
 
-    .status {
-      text-align: center;
-      font-size: 12px;
-      color: #666;
-    }
-  </style>
+/* cards */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.card h2 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+/* inputs */
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* buttons */
+.btn {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-warning {
+  background: var(--warning);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+}
+
+/* list */
+ul {
+  list-style: none;
+}
+
+li {
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.actions button {
+  margin-left: 5px;
+}
+
+/* subtle text */
+.small {
+  font-size: 12px;
+  color: var(--muted);
+}
+</style>
 </head>
 
 <body>
+ <body>
+
+<div class="layout">
+
+  <div class="sidebar">
+    <h1>Life Services</h1>
+    <button onclick="logout()">Sair</button>
+  </div>
+
+  <div class="main">
+
+    <div class="card">
+      <h2>Novo Cliente</h2>
+
+      <input id="nome" placeholder="Nome">
+      <input id="telefone" placeholder="Telefone">
+      <input id="endereco" placeholder="Endereço">
+
+      <button class="btn btn-primary" onclick="cadastrar()">Salvar</button>
+    </div>
+
+    <div class="card">
+      <h2>Clientes</h2>
+      <ul id="lista"></ul>
+    </div>
+
+  </div>
+
+</div>
+
 
 <!-- LOGIN -->
 <div class="container" id="loginBox">

@@ -1,17 +1,52 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
+const User = require('../models/User');
 
-const USER = "admin";
-const PASS = "123";
+// 🔐 REGISTRO
+router.post('/register', async (req, res) => {
+  try {
+    const { usuario, senha } = req.body;
 
-router.post('/login', (req, res) => {
-  const { usuario, senha } = req.body;
+    const existe = await User.findOne({ usuario });
+    if (existe) {
+      return res.status(400).json({ error: "Usuário já existe" });
+    }
 
-  if (usuario === USER && senha === PASS) {
-    return res.json({ token: "token123" });
+    const hash = await bcrypt.hash(senha, 10);
+
+    const novoUser = new User({
+      usuario,
+      senha: hash
+    });
+
+    await novoUser.save();
+
+    res.json({ message: "Usuário criado com sucesso" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
+});
 
-  res.status(401).json({ error: "Credenciais inválidas" });
+// 🔐 LOGIN
+router.post('/login', async (req, res) => {
+  try {
+    const { usuario, senha } = req.body;
+
+    const user = await User.findOne({ usuario });
+    if (!user) {
+      return res.status(401).json({ error: "Usuário não encontrado" });
+    }
+
+    const ok = await bcrypt.compare(senha, user.senha);
+    if (!ok) {
+      return res.status(401).json({ error: "Senha inválida" });
+    }
+
+    res.json({ token: "token123" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;

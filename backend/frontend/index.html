@@ -21,7 +21,7 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
-    h1 {
+    h1, h2 {
       text-align: center;
       color: #333;
     }
@@ -49,19 +49,10 @@
       margin-top: 10px;
     }
 
-    .btn-edit {
-      background: #ffc107;
-    }
+    .btn-edit { background: #ffc107; }
+    .btn-delete { background: #dc3545; color: white; }
 
-    .btn-delete {
-      background: #dc3545;
-      color: white;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-    }
+    ul { list-style: none; padding: 0; }
 
     li {
       background: #f9f9f9;
@@ -73,13 +64,9 @@
       align-items: center;
     }
 
-    .info {
-      flex: 1;
-    }
+    .info { flex: 1; }
 
-    .actions button {
-      margin-left: 5px;
-    }
+    .actions button { margin-left: 5px; }
 
     .top-bar {
       display: flex;
@@ -97,8 +84,19 @@
 
 <body>
 
-<div class="container">
+<!-- 🔐 LOGIN -->
+<div class="container" id="loginBox">
+  <h2>Login</h2>
+  <input id="usuario" placeholder="Usuário">
+  <input id="senha" type="password" placeholder="Senha">
+  <button class="btn-salvar" onclick="login()">Entrar</button>
+</div>
+
+<!-- 🚀 APP -->
+<div class="container" id="app" style="display:none;">
   <h1>Life Services</h1>
+
+  <button onclick="logout()" style="background:#333;color:#fff;width:100%;">Sair</button>
 
   <input id="nome" placeholder="Nome">
   <input id="telefone" placeholder="Telefone">
@@ -119,8 +117,49 @@
 <script>
 
 const API = "https://life-services-wiq6.onrender.com/clientes";
+const AUTH = "https://life-services-wiq6.onrender.com/auth/login";
 
 let editando = null;
+let TOKEN = localStorage.getItem("token");
+
+// 🔐 controle de acesso
+function checarLogin() {
+  if (TOKEN) {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    carregar();
+  } else {
+    document.getElementById("loginBox").style.display = "block";
+    document.getElementById("app").style.display = "none";
+  }
+}
+
+// 🔐 login
+async function login() {
+  const usuario = document.getElementById('usuario').value;
+  const senha = document.getElementById('senha').value;
+
+  const res = await fetch(AUTH, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ usuario, senha })
+  });
+
+  const data = await res.json();
+
+  if (data.token) {
+    localStorage.setItem("token", data.token);
+    location.reload();
+  } else {
+    alert("Login inválido");
+  }
+}
+
+// 🔐 logout
+function logout() {
+  localStorage.removeItem("token");
+  location.reload();
+}
 
 function setStatus(msg) {
   document.getElementById('status').innerText = msg;
@@ -141,7 +180,10 @@ async function cadastrar() {
   if (editando) {
     await fetch(API + '/' + editando, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + TOKEN
+      },
       body: JSON.stringify({ nome, telefone, endereco })
     });
 
@@ -150,14 +192,17 @@ async function cadastrar() {
   } else {
     await fetch(API, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + TOKEN
+      },
       body: JSON.stringify({ nome, telefone, endereco })
     });
   }
 
   limpar();
   carregar();
-  setStatus("✔ Salvo com sucesso");
+  setStatus("✔ Salvo");
 }
 
 function limpar() {
@@ -167,7 +212,12 @@ function limpar() {
 }
 
 async function carregar() {
-  const res = await fetch(API);
+  const res = await fetch(API, {
+    headers: {
+      "Authorization": "Bearer " + TOKEN
+    }
+  });
+
   const clientes = await res.json();
 
   const termo = document.getElementById('busca').value.toLowerCase();
@@ -207,20 +257,25 @@ function editar(id, nome, telefone, endereco) {
   document.getElementById('endereco').value = endereco;
 
   editando = id;
-
   document.getElementById('btnSalvar').innerText = "Atualizar";
 }
 
 async function deletar(id) {
   if (!confirm("Tem certeza que deseja excluir?")) return;
 
-  await fetch(API + '/' + id, { method: "DELETE" });
+  await fetch(API + '/' + id, {
+    method: "DELETE",
+    headers: {
+      "Authorization": "Bearer " + TOKEN
+    }
+  });
 
-  setStatus("🗑️ Cliente removido");
+  setStatus("🗑️ Removido");
   carregar();
 }
 
-carregar();
+// inicia
+checarLogin();
 
 </script>
 

@@ -3,50 +3,140 @@
 <head>
   <meta charset="utf-8">
   <title>Life Services</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+
+    .btn-salvar {
+      width: 100%;
+      background: #007bff;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .btn-edit {
+      background: #ffc107;
+    }
+
+    .btn-delete {
+      background: #dc3545;
+      color: white;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: #f9f9f9;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .info {
+      flex: 1;
+    }
+
+    .actions button {
+      margin-left: 5px;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>Cadastro de Clientes</h1>
+<div class="container">
+  <h1>Life Services</h1>
 
-<input id="nome" placeholder="Nome"><br><br>
-<input id="telefone" placeholder="Telefone"><br><br>
-<input id="endereco" placeholder="Endereço"><br><br>
+  <input id="nome" placeholder="Nome">
+  <input id="telefone" placeholder="Telefone">
+  <input id="endereco" placeholder="Endereço">
 
-<button onclick="cadastrar()">Cadastrar</button>
+  <button class="btn-salvar" onclick="cadastrar()">Salvar</button>
 
-<h2>Clientes</h2>
-<ul id="lista"></ul>
+  <h2>Clientes</h2>
+  <ul id="lista"></ul>
+</div>
 
 <script>
 
 const API = "https://life-services-wiq6.onrender.com/clientes";
+
+let editando = null;
 
 async function cadastrar() {
   const nome = document.getElementById('nome').value.trim();
   const telefone = document.getElementById('telefone').value.trim();
   const endereco = document.getElementById('endereco').value.trim();
 
-  // validação (evita lixo no banco)
   if (!nome || !telefone || !endereco) {
     alert("Preencha todos os campos!");
     return;
   }
 
-  await fetch(API, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ nome, telefone, endereco })
-  });
+  if (editando) {
+    await fetch(API + '/' + editando, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome, telefone, endereco })
+    });
+    editando = null;
+  } else {
+    await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome, telefone, endereco })
+    });
+  }
 
-  // limpa inputs
+  limpar();
+  carregar();
+}
+
+function limpar() {
   document.getElementById('nome').value = "";
   document.getElementById('telefone').value = "";
   document.getElementById('endereco').value = "";
-
-  carregar();
 }
 
 async function carregar() {
@@ -58,14 +148,39 @@ async function carregar() {
 
   clientes.forEach(c => {
     const li = document.createElement('li');
+
     li.innerHTML = `
-      <b>${c.nome}</b> | ${c.telefone} | ${c.endereco}
+      <div class="info">
+        <b>${c.nome}</b><br>
+        ${c.telefone} <br>
+        ${c.endereco}
+      </div>
+
+      <div class="actions">
+        <button class="btn-edit" onclick="editar('${c._id}', '${c.nome}', '${c.telefone}', '${c.endereco}')">✏️</button>
+        <button class="btn-delete" onclick="deletar('${c._id}')">🗑️</button>
+      </div>
     `;
+
     lista.appendChild(li);
   });
 }
 
-// carrega ao abrir
+function editar(id, nome, telefone, endereco) {
+  document.getElementById('nome').value = nome;
+  document.getElementById('telefone').value = telefone;
+  document.getElementById('endereco').value = endereco;
+
+  editando = id;
+}
+
+async function deletar(id) {
+  if (!confirm("Tem certeza que deseja excluir?")) return;
+
+  await fetch(API + '/' + id, { method: "DELETE" });
+  carregar();
+}
+
 carregar();
 
 </script>

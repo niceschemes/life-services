@@ -26,6 +26,9 @@ mongoose.connect(process.env.MONGO_URL)
 const clientesRoutes = require('./routes/clientes');
 app.use('/clientes', clientesRoutes);
 
+const authRoutes = require('./routes/auth');
+app.use('/auth', authRoutes);
+
 /* =========================
    ROTA FRONTEND (IMPORTANTE)
 ========================= */

@@ -21,10 +21,7 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
-    h1, h2 {
-      text-align: center;
-      color: #333;
-    }
+    h1, h2 { text-align: center; }
 
     input {
       width: 100%;
@@ -39,7 +36,6 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      margin-right: 5px;
     }
 
     .btn-salvar {
@@ -52,8 +48,6 @@
     .btn-edit { background: #ffc107; }
     .btn-delete { background: #dc3545; color: white; }
 
-    ul { list-style: none; padding: 0; }
-
     li {
       background: #f9f9f9;
       padding: 10px;
@@ -61,18 +55,9 @@
       border-radius: 6px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
     }
 
-    .info { flex: 1; }
-
-    .actions button { margin-left: 5px; }
-
-    .top-bar {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
+    .top-bar { margin-bottom: 10px; }
 
     .status {
       text-align: center;
@@ -84,7 +69,7 @@
 
 <body>
 
-<!-- 🔐 LOGIN -->
+<!-- LOGIN -->
 <div class="container" id="loginBox">
   <h2>Login</h2>
   <input id="usuario" placeholder="Usuário">
@@ -92,7 +77,7 @@
   <button class="btn-salvar" onclick="login()">Entrar</button>
 </div>
 
-<!-- 🚀 APP -->
+<!-- APP -->
 <div class="container" id="app" style="display:none;">
   <h1>Life Services</h1>
 
@@ -105,7 +90,7 @@
   <button id="btnSalvar" class="btn-salvar" onclick="cadastrar()">Salvar</button>
 
   <div class="top-bar">
-    <input id="busca" placeholder="🔍 Buscar cliente..." oninput="carregar()">
+    <input id="busca" placeholder="🔍 Buscar..." oninput="carregar()">
   </div>
 
   <h2>Clientes</h2>
@@ -122,7 +107,7 @@ const AUTH = "https://life-services-wiq6.onrender.com/auth/login";
 let editando = null;
 let TOKEN = localStorage.getItem("token");
 
-// 🔐 controle de acesso
+// 🔐 verifica login
 function checarLogin() {
   if (TOKEN) {
     document.getElementById("loginBox").style.display = "none";
@@ -134,7 +119,7 @@ function checarLogin() {
   }
 }
 
-// 🔐 login
+// 🔐 login JWT
 async function login() {
   const usuario = document.getElementById('usuario').value;
   const senha = document.getElementById('senha').value;
@@ -151,7 +136,7 @@ async function login() {
     localStorage.setItem("token", data.token);
     location.reload();
   } else {
-    alert("Login inválido");
+    alert(data.error || "Erro no login");
   }
 }
 
@@ -161,48 +146,61 @@ function logout() {
   location.reload();
 }
 
+// 🚨 fetch protegido
+async function fetchAuth(url, options = {}) {
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      "Authorization": "Bearer " + TOKEN,
+      "Content-Type": "application/json"
+    }
+  });
+
+  if (res.status === 401) {
+    alert("Sessão expirada. Faça login novamente.");
+    logout();
+    return null;
+  }
+
+  return res;
+}
+
 function setStatus(msg) {
   document.getElementById('status').innerText = msg;
 }
 
+// CRUD
 async function cadastrar() {
   const nome = document.getElementById('nome').value.trim();
   const telefone = document.getElementById('telefone').value.trim();
   const endereco = document.getElementById('endereco').value.trim();
 
   if (!nome || !telefone || !endereco) {
-    alert("Preencha todos os campos!");
+    alert("Preencha tudo");
     return;
   }
 
   setStatus("Salvando...");
 
   if (editando) {
-    await fetch(API + '/' + editando, {
+    await fetchAuth(API + '/' + editando, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + TOKEN
-      },
       body: JSON.stringify({ nome, telefone, endereco })
     });
 
     editando = null;
     document.getElementById('btnSalvar').innerText = "Salvar";
   } else {
-    await fetch(API, {
+    await fetchAuth(API, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + TOKEN
-      },
       body: JSON.stringify({ nome, telefone, endereco })
     });
   }
 
   limpar();
   carregar();
-  setStatus("✔ Salvo");
+  setStatus("✔ OK");
 }
 
 function limpar() {
@@ -212,14 +210,10 @@ function limpar() {
 }
 
 async function carregar() {
-  const res = await fetch(API, {
-    headers: {
-      "Authorization": "Bearer " + TOKEN
-    }
-  });
+  const res = await fetchAuth(API);
+  if (!res) return;
 
   const clientes = await res.json();
-
   const termo = document.getElementById('busca').value.toLowerCase();
 
   const lista = document.getElementById('lista');
@@ -235,13 +229,13 @@ async function carregar() {
       const li = document.createElement('li');
 
       li.innerHTML = `
-        <div class="info">
+        <div>
           <b>${c.nome}</b><br>
           ${c.telefone}<br>
           ${c.endereco}
         </div>
 
-        <div class="actions">
+        <div>
           <button class="btn-edit" onclick="editar('${c._id}', '${c.nome}', '${c.telefone}', '${c.endereco}')">✏️</button>
           <button class="btn-delete" onclick="deletar('${c._id}')">🗑️</button>
         </div>
@@ -261,20 +255,15 @@ function editar(id, nome, telefone, endereco) {
 }
 
 async function deletar(id) {
-  if (!confirm("Tem certeza que deseja excluir?")) return;
+  if (!confirm("Excluir?")) return;
 
-  await fetch(API + '/' + id, {
-    method: "DELETE",
-    headers: {
-      "Authorization": "Bearer " + TOKEN
-    }
-  });
+  await fetchAuth(API + '/' + id, { method: "DELETE" });
 
   setStatus("🗑️ Removido");
   carregar();
 }
 
-// inicia
+// start
 checarLogin();
 
 </script>

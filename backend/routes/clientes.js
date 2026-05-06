@@ -1,6 +1,9 @@
+const auth = require('../middleware/auth');
 const express = require('express');
 const router = express.Router();
 const Cliente = require('../models/clientes');
+
+router.use(auth);
 
 /* =========================
    CRIAR CLIENTE

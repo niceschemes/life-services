@@ -225,14 +225,19 @@ let TOKEN = localStorage.getItem("token");
 
 // 🔐 verifica login
 function checarLogin() {
-  if (TOKEN) {
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("app").style.display = "block";
-    carregar();
-  } else {
+
+  TOKEN = localStorage.getItem("token");
+
+  if (!TOKEN) {
     document.getElementById("loginBox").style.display = "block";
     document.getElementById("app").style.display = "none";
+    return;
   }
+
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("app").style.display = "block";
+
+  carregar();
 }
 
 // 🔐 login JWT

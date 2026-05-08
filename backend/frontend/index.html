@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Life Services</title>
 
   <link rel="icon" type="image/png" href="favicon.png">
@@ -11,13 +13,17 @@
 
 :root{
   --bg:#0f172a;
+  --sidebar:#020617;
   --card:#111827;
   --border:#1f2937;
   --text:#e5e7eb;
   --muted:#94a3b8;
   --primary:#2563eb;
+  --primary-hover:#1d4ed8;
   --danger:#dc2626;
+  --danger-hover:#b91c1c;
   --warning:#f59e0b;
+  --warning-hover:#d97706;
 }
 
 *{
@@ -40,21 +46,32 @@ body{
   align-items:center;
   justify-content:center;
   padding:20px;
+  background:
+    radial-gradient(circle at top,#1e293b 0%,#0f172a 60%);
 }
 
 .login-card{
   width:100%;
-  max-width:380px;
-  background:var(--card);
+  max-width:400px;
+  background:rgba(17,24,39,0.95);
   border:1px solid var(--border);
-  border-radius:12px;
-  padding:30px;
+  border-radius:18px;
+  padding:35px;
+  backdrop-filter:blur(10px);
+  box-shadow:0 20px 60px rgba(0,0,0,0.4);
 }
 
 .login-card h1{
-  font-size:22px;
-  margin-bottom:25px;
+  font-size:28px;
+  margin-bottom:10px;
   text-align:center;
+}
+
+.login-card p{
+  text-align:center;
+  color:var(--muted);
+  margin-bottom:25px;
+  font-size:14px;
 }
 
 /* APP */
@@ -64,64 +81,119 @@ body{
   min-height:100vh;
 }
 
+/* SIDEBAR */
+
 .sidebar{
-  width:230px;
-  background:#020617;
+  width:250px;
+  background:var(--sidebar);
   border-right:1px solid var(--border);
-  padding:20px;
+  padding:24px;
+  display:flex;
+  flex-direction:column;
 }
 
 .logo{
-  font-size:18px;
-  font-weight:600;
-  margin-bottom:30px;
+  font-size:22px;
+  font-weight:700;
+  margin-bottom:35px;
 }
 
 .sidebar button{
   width:100%;
-  padding:12px;
+  padding:14px;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
   background:transparent;
   color:var(--muted);
   text-align:left;
   cursor:pointer;
   transition:0.2s;
+  margin-bottom:8px;
+  font-size:14px;
 }
 
 .sidebar button:hover{
-  background:var(--card);
-  color:var(--text);
+  background:#111827;
+  color:white;
 }
+
+.logout{
+  margin-top:auto;
+}
+
+/* MAIN */
 
 .main{
   flex:1;
   padding:30px;
 }
 
+/* HEADER */
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.topbar h1{
+  font-size:28px;
+}
+
+.topbar p{
+  color:var(--muted);
+  margin-top:5px;
+}
+
+/* CARDS */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+  margin-bottom:25px;
+}
+
 .card{
   background:var(--card);
   border:1px solid var(--border);
-  border-radius:12px;
-  padding:20px;
-  margin-bottom:20px;
+  border-radius:16px;
+  padding:22px;
 }
 
 .card h2{
   font-size:18px;
-  margin-bottom:20px;
+  margin-bottom:18px;
 }
 
-/* INPUTS */
+.stat-title{
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:10px;
+}
+
+.stat-number{
+  font-size:34px;
+  font-weight:700;
+}
+
+/* FORM */
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:12px;
+}
 
 input{
   width:100%;
-  padding:12px;
-  margin-bottom:12px;
-  border-radius:8px;
+  padding:14px;
+  border-radius:10px;
   border:1px solid var(--border);
   background:#0b1220;
-  color:var(--text);
+  color:white;
+  font-size:14px;
 }
 
 input:focus{
@@ -133,16 +205,21 @@ input:focus{
 
 .btn{
   border:none;
-  border-radius:8px;
-  padding:10px 14px;
+  border-radius:10px;
+  padding:12px 16px;
   cursor:pointer;
+  transition:0.2s;
   font-size:14px;
+  font-weight:600;
 }
 
 .btn-primary{
   background:var(--primary);
   color:white;
-  width:100%;
+}
+
+.btn-primary:hover{
+  background:var(--primary-hover);
 }
 
 .btn-warning{
@@ -150,20 +227,32 @@ input:focus{
   color:black;
 }
 
+.btn-warning:hover{
+  background:var(--warning-hover);
+}
+
 .btn-danger{
   background:var(--danger);
   color:white;
 }
 
+.btn-danger:hover{
+  background:var(--danger-hover);
+}
+
 /* STATUS */
 
 .status{
-  margin-top:10px;
+  margin-top:15px;
   color:var(--muted);
   font-size:13px;
 }
 
 /* TABLE */
+
+.table-wrapper{
+  overflow:auto;
+}
 
 .table{
   width:100%;
@@ -172,14 +261,14 @@ input:focus{
 
 .table th{
   text-align:left;
-  padding:14px;
-  font-size:13px;
+  padding:16px;
   color:var(--muted);
+  font-size:13px;
   border-bottom:1px solid var(--border);
 }
 
 .table td{
-  padding:16px 14px;
+  padding:18px 16px;
   border-bottom:1px solid var(--border);
 }
 
@@ -192,12 +281,81 @@ input:focus{
   gap:8px;
 }
 
+/* MODAL */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+  backdrop-filter:blur(4px);
+}
+
+.modal-content{
+  width:100%;
+  max-width:500px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:25px;
+  animation:modalOpen 0.2s ease;
+}
+
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.close-btn{
+  background:none;
+  border:none;
+  color:var(--muted);
+  font-size:22px;
+  cursor:pointer;
+}
+
+.close-btn:hover{
+  color:white;
+}
+
+@keyframes modalOpen{
+
+  from{
+    opacity:0;
+    transform:scale(0.95);
+  }
+
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+
+}
+
 .small{
   color:var(--muted);
   font-size:13px;
 }
 
+@media(max-width:900px){
+
+  .layout{
+    flex-direction:column;
+  }
+
+  .sidebar{
+    width:100%;
+  }
+
+}
+
   </style>
+
 </head>
 
 <body>
@@ -210,7 +368,16 @@ input:focus{
 
     <h1>Life Services</h1>
 
-    <input id="usuario" placeholder="Usuário">
+    <p>
+      Sistema de gerenciamento empresarial
+    </p>
+
+    <input
+      id="usuario"
+      placeholder="Usuário"
+    >
+
+    <br><br>
 
     <input
       id="senha"
@@ -218,7 +385,13 @@ input:focus{
       placeholder="Senha"
     >
 
-    <button class="btn btn-primary" onclick="login()">
+    <br><br>
+
+    <button
+      class="btn btn-primary"
+      style="width:100%;"
+      onclick="login()"
+    >
       Entrar
     </button>
 
@@ -230,280 +403,403 @@ input:focus{
 
 <div id="app" style="display:none;">
 
-<div class="layout">
+  <div class="layout">
 
-  <!-- SIDEBAR -->
+    <!-- SIDEBAR -->
 
-  <aside class="sidebar">
+    <aside class="sidebar">
 
-    <div class="logo">
-      Life Services
-    </div>
-
-    <button>Dashboard</button>
-    <button>Clientes</button>
-    <button>Serviços</button>
-    <button>Financeiro</button>
-
-    <hr style="margin:20px 0;border-color:#1f2937;">
-
-    <button onclick="logout()">
-      Sair
-    </button>
-
-  </aside>
-
-  <!-- MAIN -->
-
-  <main class="main">
-
-    <!-- TOPO -->
-
-    <div class="card">
-
-      <h2>Dashboard</h2>
-
-      <div class="small">
-        Painel geral do sistema
+      <div class="logo">
+        Life Services
       </div>
 
-    </div>
+      <button>Dashboard</button>
 
-    <!-- CARDS -->
+      <button>Clientes</button>
 
-    <div style="
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:20px;
-      margin-bottom:20px;
-    ">
+      <button>Serviços</button>
 
-      <div class="card">
-        <div class="small">Clientes</div>
-        <h1 id="totalClientes">0</h1>
-      </div>
+      <button>Financeiro</button>
 
-      <div class="card">
-        <div class="small">Serviços</div>
-        <h1>12</h1>
-      </div>
+      <button>Relatórios</button>
 
-      <div class="card">
-        <div class="small">Financeiro</div>
-        <h1>R$ 4.500</h1>
-      </div>
-
-    </div>
-
-    <!-- FORM -->
-
-    <div class="card">
-
-      <h2>Novo Cliente</h2>
-
-      <input id="nome" placeholder="Nome">
-
-      <input id="telefone" placeholder="Telefone">
-
-      <input id="endereco" placeholder="Endereço">
-
-      <button
-        id="btnSalvar"
-        class="btn btn-primary"
-        onclick="cadastrar()"
-      >
-        Salvar
+      <button class="logout" onclick="logout()">
+        Sair
       </button>
 
-      <div class="status" id="status"></div>
+    </aside>
 
-    </div>
+    <!-- MAIN -->
 
-    <!-- TABELA -->
+    <main class="main">
 
-    <div class="card">
+      <!-- TOPBAR -->
 
-      <h2>Clientes</h2>
+      <div class="topbar">
 
-      <input
-        id="busca"
-        placeholder="Buscar cliente..."
-        oninput="carregar()"
-      >
+        <div>
+          <h1>Dashboard</h1>
 
-      <table class="table">
+          <p>
+            Painel administrativo do sistema
+          </p>
+        </div>
 
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Telefone</th>
-            <th>Endereço</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
+      </div>
 
-        <tbody id="lista"></tbody>
+      <!-- STATS -->
 
-      </table>
+      <div class="stats">
 
-    </div>
+        <div class="card">
 
-  </main>
+          <div class="stat-title">
+            Clientes
+          </div>
+
+          <div
+            class="stat-number"
+            id="totalClientes"
+          >
+            0
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="stat-title">
+            Serviços
+          </div>
+
+          <div class="stat-number">
+            12
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="stat-title">
+            Financeiro
+          </div>
+
+          <div class="stat-number">
+            R$ 4.500
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- FORM -->
+
+      <div class="card">
+
+        <h2>Novo Cliente</h2>
+
+        <div class="form-grid">
+
+          <input
+            id="nome"
+            placeholder="Nome"
+          >
+
+          <input
+            id="telefone"
+            placeholder="Telefone"
+          >
+
+          <input
+            id="endereco"
+            placeholder="Endereço"
+          >
+
+        </div>
+
+        <br>
+
+        <button
+          id="btnSalvar"
+          class="btn btn-primary"
+          onclick="cadastrar()"
+        >
+          Salvar
+        </button>
+
+        <div
+          class="status"
+          id="status"
+        ></div>
+
+      </div>
+
+      <!-- CLIENTES -->
+
+      <div class="card">
+
+        <h2>Clientes</h2>
+
+        <input
+          id="busca"
+          placeholder="Buscar cliente..."
+          oninput="carregar()"
+        >
+
+        <br><br>
+
+        <div class="table-wrapper">
+
+          <table class="table">
+
+            <thead>
+
+              <tr>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Endereço</th>
+                <th>Ações</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="lista"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
 
 </div>
+
+<!-- MODAL -->
+
+<div class="modal" id="modal">
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h2>Editar Cliente</h2>
+
+      <button
+        class="close-btn"
+        onclick="fecharModal()"
+      >
+        ✕
+      </button>
+
+    </div>
+
+    <input
+      id="editNome"
+      placeholder="Nome"
+    >
+
+    <br><br>
+
+    <input
+      id="editTelefone"
+      placeholder="Telefone"
+    >
+
+    <br><br>
+
+    <input
+      id="editEndereco"
+      placeholder="Endereço"
+    >
+
+    <br><br>
+
+    <button
+      class="btn btn-primary"
+      onclick="salvarEdicao()"
+    >
+      Salvar Alterações
+    </button>
+
+  </div>
 
 </div>
 
 <script>
 
-const API = "https://life-services-wiq6.onrender.com/clientes";
-const AUTH = "https://life-services-wiq6.onrender.com/auth/login";
+const API =
+"https://life-services-wiq6.onrender.com/clientes";
+
+const AUTH =
+"https://life-services-wiq6.onrender.com/auth/login";
 
 let TOKEN = localStorage.getItem("token");
+
 let editando = null;
 
 /* LOGIN */
 
-function checarLogin() {
+function checarLogin(){
 
   TOKEN = localStorage.getItem("token");
 
-  if (!TOKEN) {
+  if(!TOKEN){
+
     document.getElementById("loginBox").style.display = "flex";
+
     document.getElementById("app").style.display = "none";
+
     return;
+
   }
 
   document.getElementById("loginBox").style.display = "none";
+
   document.getElementById("app").style.display = "block";
 
   carregar();
+
 }
 
-async function login() {
+async function login(){
 
-  const usuario = document.getElementById("usuario").value;
-  const senha = document.getElementById("senha").value;
+  const usuario =
+  document.getElementById("usuario").value;
 
-  const res = await fetch(AUTH, {
+  const senha =
+  document.getElementById("senha").value;
+
+  const res = await fetch(AUTH,{
+
     method:"POST",
+
     headers:{
       "Content-Type":"application/json"
     },
+
     body:JSON.stringify({
       usuario,
       senha
     })
+
   });
 
   const data = await res.json();
 
-  if (data.token) {
+  if(data.token){
 
-    localStorage.setItem("token", data.token);
+    localStorage.setItem("token",data.token);
 
     location.reload();
 
-  } else {
+  }else{
 
     alert(data.error || "Login inválido");
 
   }
+
 }
 
-function logout() {
+function logout(){
 
   localStorage.removeItem("token");
 
   location.reload();
+
 }
 
 /* FETCH */
 
-async function fetchAuth(url, options = {}) {
+async function fetchAuth(url,options = {}){
 
-  const res = await fetch(url, {
+  const res = await fetch(url,{
+
     ...options,
+
     headers:{
       ...(options.headers || {}),
       "Content-Type":"application/json",
       "Authorization":"Bearer " + TOKEN
     }
+
   });
 
-  if (res.status === 401) {
+  if(res.status === 401){
 
     localStorage.removeItem("token");
 
     document.getElementById("loginBox").style.display = "flex";
+
     document.getElementById("app").style.display = "none";
 
     return null;
+
   }
 
   return res;
+
 }
 
 /* STATUS */
 
 function setStatus(msg){
+
   document.getElementById("status").innerText = msg;
+
 }
 
 /* CRUD */
 
-async function cadastrar() {
+async function cadastrar(){
 
-  const nome = document.getElementById("nome").value.trim();
-  const telefone = document.getElementById("telefone").value.trim();
-  const endereco = document.getElementById("endereco").value.trim();
+  const nome =
+  document.getElementById("nome").value.trim();
 
-  if (!nome || !telefone || !endereco) {
+  const telefone =
+  document.getElementById("telefone").value.trim();
+
+  const endereco =
+  document.getElementById("endereco").value.trim();
+
+  if(!nome || !telefone || !endereco){
+
     alert("Preencha todos os campos");
+
     return;
+
   }
 
   setStatus("Salvando...");
 
-  if (editando) {
+  await fetchAuth(API,{
 
-    await fetchAuth(API + "/" + editando, {
-      method:"PUT",
-      body:JSON.stringify({
-        nome,
-        telefone,
-        endereco
-      })
-    });
+    method:"POST",
 
-    editando = null;
+    body:JSON.stringify({
+      nome,
+      telefone,
+      endereco
+    })
 
-    document.getElementById("btnSalvar").innerText = "Salvar";
-
-  } else {
-
-    await fetchAuth(API, {
-      method:"POST",
-      body:JSON.stringify({
-        nome,
-        telefone,
-        endereco
-      })
-    });
-
-  }
+  });
 
   limpar();
 
   carregar();
 
-  setStatus("Salvo com sucesso");
+  setStatus("Cliente salvo");
+
 }
 
 function limpar(){
 
   document.getElementById("nome").value = "";
+
   document.getElementById("telefone").value = "";
+
   document.getElementById("endereco").value = "";
 
 }
@@ -512,99 +808,162 @@ async function carregar(){
 
   const res = await fetchAuth(API);
 
-  if (!res) return;
+  if(!res) return;
 
   const clientes = await res.json();
 
-  document.getElementById("totalClientes").innerText = clientes.length;
+  document.getElementById("totalClientes")
+  .innerText = clientes.length;
 
-  const termo = document
-    .getElementById("busca")
-    .value
-    .toLowerCase();
+  const termo =
+  document.getElementById("busca")
+  .value
+  .toLowerCase();
 
-  const lista = document.getElementById("lista");
+  const lista =
+  document.getElementById("lista");
 
   lista.innerHTML = "";
 
   clientes
-    .filter(c =>
+  .filter(c =>
 
-      c.nome.toLowerCase().includes(termo) ||
+    c.nome.toLowerCase().includes(termo) ||
 
-      c.telefone.toLowerCase().includes(termo) ||
+    c.telefone.toLowerCase().includes(termo) ||
 
-      c.endereco.toLowerCase().includes(termo)
+    c.endereco.toLowerCase().includes(termo)
 
-    )
-    .forEach(c => {
+  )
 
-      const li = document.createElement("tr");
+  .forEach(c => {
 
-      li.innerHTML = `
-        <td>
-          <b>${c.nome}</b>
-        </td>
+    const tr = document.createElement("tr");
 
-        <td>
-          ${c.telefone}
-        </td>
+    tr.innerHTML = `
 
-        <td>
-          ${c.endereco}
-        </td>
+      <td>
+        <b>${c.nome}</b>
+      </td>
 
-        <td>
+      <td>
+        ${c.telefone}
+      </td>
 
-          <div class="actions">
+      <td>
+        ${c.endereco}
+      </td>
 
-            <button
-              class="btn btn-warning"
-              onclick="editar('${c._id}', '${c.nome}', '${c.telefone}', '${c.endereco}')"
-            >
-              Editar
-            </button>
+      <td>
 
-            <button
-              class="btn btn-danger"
-              onclick="deletar('${c._id}')"
-            >
-              Excluir
-            </button>
+        <div class="actions">
 
-          </div>
+          <button
+            class="btn btn-warning"
+            onclick="editar(
+              '${c._id}',
+              '${c.nome}',
+              '${c.telefone}',
+              '${c.endereco}'
+            )"
+          >
+            Editar
+          </button>
 
-        </td>
-      `;
+          <button
+            class="btn btn-danger"
+            onclick="deletar('${c._id}')"
+          >
+            Excluir
+          </button>
 
-      lista.appendChild(li);
+        </div>
 
-    });
+      </td>
+
+    `;
+
+    lista.appendChild(tr);
+
+  });
 
 }
 
-function editar(id, nome, telefone, endereco){
+/* EDITAR */
 
-  document.getElementById("nome").value = nome;
-  document.getElementById("telefone").value = telefone;
-  document.getElementById("endereco").value = endereco;
+function editar(id,nome,telefone,endereco){
+
+  document.getElementById("modal").style.display = "flex";
+
+  document.getElementById("editNome").value = nome;
+
+  document.getElementById("editTelefone").value = telefone;
+
+  document.getElementById("editEndereco").value = endereco;
 
   editando = id;
 
-  document.getElementById("btnSalvar").innerText = "Atualizar";
 }
+
+function fecharModal(){
+
+  document.getElementById("modal").style.display = "none";
+
+}
+
+async function salvarEdicao(){
+
+  const nome =
+  document.getElementById("editNome")
+  .value
+  .trim();
+
+  const telefone =
+  document.getElementById("editTelefone")
+  .value
+  .trim();
+
+  const endereco =
+  document.getElementById("editEndereco")
+  .value
+  .trim();
+
+  await fetchAuth(API + "/" + editando,{
+
+    method:"PUT",
+
+    body:JSON.stringify({
+      nome,
+      telefone,
+      endereco
+    })
+
+  });
+
+  fecharModal();
+
+  carregar();
+
+  setStatus("Cliente atualizado");
+
+}
+
+/* DELETE */
 
 async function deletar(id){
 
-  if (!confirm("Excluir cliente?")) return;
+  if(!confirm("Excluir cliente?")) return;
 
-  await fetchAuth(API + "/" + id, {
+  await fetchAuth(API + "/" + id,{
+
     method:"DELETE"
+
   });
 
   carregar();
 
   setStatus("Cliente removido");
+
 }
 
 /* START */

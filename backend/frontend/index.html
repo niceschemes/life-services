@@ -1,218 +1,286 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Life Services</title>
 
   <link rel="icon" type="image/png" href="favicon.png">
 
   <style>
-:root {
-  --bg: #0f172a;
-  --sidebar: #020617;
-  --card: #111827;
-  --border: #1f2937;
-  --text: #e5e7eb;
-  --muted: #9ca3af;
-  --primary: #2563eb;
-  --danger: #dc2626;
-  --warning: #f59e0b;
+
+:root{
+  --bg:#0f172a;
+  --card:#111827;
+  --border:#1f2937;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --primary:#2563eb;
+  --danger:#dc2626;
+  --warning:#f59e0b;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
-body {
-  font-family: Inter, system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+body{
+  font-family:Inter,system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
 }
 
-/* layout */
-.layout {
-  display: flex;
-  height: 100vh;
+/* LOGIN */
+
+.login-screen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
 }
 
-/* sidebar */
-.sidebar {
-  width: 220px;
-  background: var(--sidebar);
-  padding: 20px;
-  border-right: 1px solid var(--border);
+.login-card{
+  width:100%;
+  max-width:380px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:30px;
 }
 
-.sidebar h1 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 30px;
+.login-card h1{
+  font-size:22px;
+  margin-bottom:25px;
+  text-align:center;
 }
 
-.sidebar button {
-  width: 100%;
-  background: none;
-  border: none;
-  color: var(--muted);
-  text-align: left;
-  padding: 10px;
-  border-radius: 6px;
-  cursor: pointer;
+/* APP */
+
+.layout{
+  display:flex;
+  min-height:100vh;
 }
 
-.sidebar button:hover {
-  background: var(--card);
-  color: var(--text);
+.sidebar{
+  width:230px;
+  background:#020617;
+  border-right:1px solid var(--border);
+  padding:20px;
 }
 
-/* main */
-.main {
-  flex: 1;
-  padding: 30px;
-  overflow-y: auto;
+.logo{
+  font-size:18px;
+  font-weight:600;
+  margin-bottom:30px;
 }
 
-/* cards */
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
+.sidebar button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:transparent;
+  color:var(--muted);
+  text-align:left;
+  cursor:pointer;
+  transition:0.2s;
 }
 
-.card h2 {
-  font-size: 16px;
-  margin-bottom: 15px;
-  font-weight: 500;
+.sidebar button:hover{
+  background:var(--card);
+  color:var(--text);
 }
 
-/* inputs */
-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text);
+.main{
+  flex:1;
+  padding:30px;
 }
 
-input:focus {
-  outline: none;
-  border-color: var(--primary);
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:20px;
 }
 
-/* buttons */
-.btn {
-  padding: 10px 14px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
+.card h2{
+  font-size:18px;
+  margin-bottom:20px;
 }
 
-.btn-primary {
-  background: var(--primary);
-  color: white;
+/* INPUTS */
+
+input{
+  width:100%;
+  padding:12px;
+  margin-bottom:12px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:#0b1220;
+  color:var(--text);
 }
 
-.btn-warning {
-  background: var(--warning);
+input:focus{
+  outline:none;
+  border-color:var(--primary);
 }
 
-.btn-danger {
-  background: var(--danger);
-  color: white;
+/* BUTTONS */
+
+.btn{
+  border:none;
+  border-radius:8px;
+  padding:10px 14px;
+  cursor:pointer;
+  font-size:14px;
 }
 
-/* list */
-ul {
-  list-style: none;
+.btn-primary{
+  background:var(--primary);
+  color:white;
+  width:100%;
 }
 
-li {
-  border-bottom: 1px solid var(--border);
-  padding: 12px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.btn-warning{
+  background:var(--warning);
+  color:black;
 }
 
-.actions button {
-  margin-left: 5px;
+.btn-danger{
+  background:var(--danger);
+  color:white;
 }
 
-/* subtle text */
-.small {
-  font-size: 12px;
-  color: var(--muted);
+/* LISTA */
+
+ul{
+  list-style:none;
 }
-</style>
+
+li{
+  padding:15px 0;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+}
+
+.info{
+  flex:1;
+}
+
+.info b{
+  display:block;
+  margin-bottom:5px;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+}
+
+/* STATUS */
+
+.status{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+  </style>
 </head>
 
 <body>
- <body>
-
-<div class="layout">
-
-  <div class="sidebar">
-    <h1>Life Services</h1>
-    <button onclick="logout()">Sair</button>
-  </div>
-
-  <div class="main">
-
-    <div class="card">
-      <h2>Novo Cliente</h2>
-
-      <input id="nome" placeholder="Nome">
-      <input id="telefone" placeholder="Telefone">
-      <input id="endereco" placeholder="Endereço">
-
-      <button class="btn btn-primary" onclick="cadastrar()">Salvar</button>
-    </div>
-
-    <div class="card">
-      <h2>Clientes</h2>
-      <ul id="lista"></ul>
-    </div>
-
-  </div>
-
-</div>
-
 
 <!-- LOGIN -->
-<div class="container" id="loginBox">
-  <h2>Login</h2>
-  <input id="usuario" placeholder="Usuário">
-  <input id="senha" type="password" placeholder="Senha">
-  <button class="btn-salvar" onclick="login()">Entrar</button>
+
+<div class="login-screen" id="loginBox">
+
+  <div class="login-card">
+
+    <h1>Life Services</h1>
+
+    <input id="usuario" placeholder="Usuário">
+
+    <input
+      id="senha"
+      type="password"
+      placeholder="Senha"
+    >
+
+    <button class="btn btn-primary" onclick="login()">
+      Entrar
+    </button>
+
+  </div>
+
 </div>
 
 <!-- APP -->
-<div class="container" id="app" style="display:none;">
-  <h1>Life Services</h1>
 
-  <button onclick="logout()" style="background:#333;color:#fff;width:100%;">Sair</button>
+<div id="app" style="display:none;">
 
-  <input id="nome" placeholder="Nome">
-  <input id="telefone" placeholder="Telefone">
-  <input id="endereco" placeholder="Endereço">
+  <div class="layout">
 
-  <button id="btnSalvar" class="btn-salvar" onclick="cadastrar()">Salvar</button>
+    <aside class="sidebar">
 
-  <div class="top-bar">
-    <input id="busca" placeholder="🔍 Buscar..." oninput="carregar()">
+      <div class="logo">
+        Life Services
+      </div>
+
+      <button onclick="logout()">
+        Sair
+      </button>
+
+    </aside>
+
+    <main class="main">
+
+      <div class="card">
+
+        <h2>Novo Cliente</h2>
+
+        <input id="nome" placeholder="Nome">
+
+        <input id="telefone" placeholder="Telefone">
+
+        <input id="endereco" placeholder="Endereço">
+
+        <button
+          id="btnSalvar"
+          class="btn btn-primary"
+          onclick="cadastrar()"
+        >
+          Salvar
+        </button>
+
+        <div class="status" id="status"></div>
+
+      </div>
+
+      <div class="card">
+
+        <h2>Clientes</h2>
+
+        <input
+          id="busca"
+          placeholder="Buscar cliente..."
+          oninput="carregar()"
+        >
+
+        <ul id="lista"></ul>
+
+      </div>
+
+    </main>
+
   </div>
 
-  <h2>Clientes</h2>
-  <ul id="lista"></ul>
-
-  <div class="status" id="status"></div>
 </div>
 
 <script>
@@ -220,16 +288,17 @@ li {
 const API = "https://life-services-wiq6.onrender.com/clientes";
 const AUTH = "https://life-services-wiq6.onrender.com/auth/login";
 
-let editando = null;
 let TOKEN = localStorage.getItem("token");
+let editando = null;
 
-// 🔐 verifica login
+/* LOGIN */
+
 function checarLogin() {
 
   TOKEN = localStorage.getItem("token");
 
   if (!TOKEN) {
-    document.getElementById("loginBox").style.display = "block";
+    document.getElementById("loginBox").style.display = "flex";
     document.getElementById("app").style.display = "none";
     return;
   }
@@ -240,151 +309,221 @@ function checarLogin() {
   carregar();
 }
 
-// 🔐 login JWT
 async function login() {
-  const usuario = document.getElementById('usuario').value;
-  const senha = document.getElementById('senha').value;
+
+  const usuario = document.getElementById("usuario").value;
+  const senha = document.getElementById("senha").value;
 
   const res = await fetch(AUTH, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ usuario, senha })
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+      usuario,
+      senha
+    })
   });
 
   const data = await res.json();
 
   if (data.token) {
+
     localStorage.setItem("token", data.token);
+
     location.reload();
+
   } else {
-    alert(data.error || "Erro no login");
+
+    alert(data.error || "Login inválido");
+
   }
 }
 
-// 🔐 logout
 function logout() {
+
   localStorage.removeItem("token");
+
   location.reload();
 }
 
-// 🚨 fetch protegido
+/* FETCH PROTEGIDO */
+
 async function fetchAuth(url, options = {}) {
+
   const res = await fetch(url, {
     ...options,
-    headers: {
+    headers:{
       ...(options.headers || {}),
-      "Authorization": "Bearer " + TOKEN,
-      "Content-Type": "application/json"
+      "Content-Type":"application/json",
+      "Authorization":"Bearer " + TOKEN
     }
   });
 
   if (res.status === 401) {
-    alert("Sessão expirada. Faça login novamente.");
-    logout();
+
+    localStorage.removeItem("token");
+
+    document.getElementById("loginBox").style.display = "flex";
+    document.getElementById("app").style.display = "none";
+
     return null;
   }
 
   return res;
 }
 
-function setStatus(msg) {
-  document.getElementById('status').innerText = msg;
+/* STATUS */
+
+function setStatus(msg){
+  document.getElementById("status").innerText = msg;
 }
 
-// CRUD
+/* CRUD */
+
 async function cadastrar() {
-  const nome = document.getElementById('nome').value.trim();
-  const telefone = document.getElementById('telefone').value.trim();
-  const endereco = document.getElementById('endereco').value.trim();
+
+  const nome = document.getElementById("nome").value.trim();
+  const telefone = document.getElementById("telefone").value.trim();
+  const endereco = document.getElementById("endereco").value.trim();
 
   if (!nome || !telefone || !endereco) {
-    alert("Preencha tudo");
+    alert("Preencha todos os campos");
     return;
   }
 
   setStatus("Salvando...");
 
   if (editando) {
-    await fetchAuth(API + '/' + editando, {
-      method: "PUT",
-      body: JSON.stringify({ nome, telefone, endereco })
+
+    await fetchAuth(API + "/" + editando, {
+      method:"PUT",
+      body:JSON.stringify({
+        nome,
+        telefone,
+        endereco
+      })
     });
 
     editando = null;
-    document.getElementById('btnSalvar').innerText = "Salvar";
+
+    document.getElementById("btnSalvar").innerText = "Salvar";
+
   } else {
+
     await fetchAuth(API, {
-      method: "POST",
-      body: JSON.stringify({ nome, telefone, endereco })
+      method:"POST",
+      body:JSON.stringify({
+        nome,
+        telefone,
+        endereco
+      })
     });
+
   }
 
   limpar();
+
   carregar();
-  setStatus("✔ OK");
+
+  setStatus("Salvo com sucesso");
 }
 
-function limpar() {
-  document.getElementById('nome').value = "";
-  document.getElementById('telefone').value = "";
-  document.getElementById('endereco').value = "";
+function limpar(){
+
+  document.getElementById("nome").value = "";
+  document.getElementById("telefone").value = "";
+  document.getElementById("endereco").value = "";
+
 }
 
-async function carregar() {
+async function carregar(){
+
   const res = await fetchAuth(API);
+
   if (!res) return;
 
   const clientes = await res.json();
-  const termo = document.getElementById('busca').value.toLowerCase();
 
-  const lista = document.getElementById('lista');
+  const termo = document
+    .getElementById("busca")
+    .value
+    .toLowerCase();
+
+  const lista = document.getElementById("lista");
+
   lista.innerHTML = "";
 
   clientes
     .filter(c =>
+
       c.nome.toLowerCase().includes(termo) ||
+
       c.telefone.toLowerCase().includes(termo) ||
+
       c.endereco.toLowerCase().includes(termo)
+
     )
     .forEach(c => {
-      const li = document.createElement('li');
+
+      const li = document.createElement("li");
 
       li.innerHTML = `
-        <div>
-          <b>${c.nome}</b><br>
+        <div class="info">
+          <b>${c.nome}</b>
           ${c.telefone}<br>
           ${c.endereco}
         </div>
 
-        <div>
-          <button class="btn-edit" onclick="editar('${c._id}', '${c.nome}', '${c.telefone}', '${c.endereco}')">✏️</button>
-          <button class="btn-delete" onclick="deletar('${c._id}')">🗑️</button>
+        <div class="actions">
+          <button
+            class="btn btn-warning"
+            onclick="editar('${c._id}', '${c.nome}', '${c.telefone}', '${c.endereco}')"
+          >
+            Editar
+          </button>
+
+          <button
+            class="btn btn-danger"
+            onclick="deletar('${c._id}')"
+          >
+            Excluir
+          </button>
         </div>
       `;
 
       lista.appendChild(li);
+
     });
+
 }
 
-function editar(id, nome, telefone, endereco) {
-  document.getElementById('nome').value = nome;
-  document.getElementById('telefone').value = telefone;
-  document.getElementById('endereco').value = endereco;
+function editar(id, nome, telefone, endereco){
+
+  document.getElementById("nome").value = nome;
+  document.getElementById("telefone").value = telefone;
+  document.getElementById("endereco").value = endereco;
 
   editando = id;
-  document.getElementById('btnSalvar').innerText = "Atualizar";
+
+  document.getElementById("btnSalvar").innerText = "Atualizar";
 }
 
-async function deletar(id) {
-  if (!confirm("Excluir?")) return;
+async function deletar(id){
 
-  await fetchAuth(API + '/' + id, { method: "DELETE" });
+  if (!confirm("Excluir cliente?")) return;
 
-  setStatus("🗑️ Removido");
+  await fetchAuth(API + "/" + id, {
+    method:"DELETE"
+  });
+
   carregar();
+
+  setStatus("Cliente removido");
 }
 
-// start
+/* START */
+
 checarLogin();
 
 </script>

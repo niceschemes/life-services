@@ -155,28 +155,36 @@ input:focus{
   color:white;
 }
 
-/* LISTA */
+/* STATUS */
 
-ul{
-  list-style:none;
+.status{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:13px;
 }
 
-li{
-  padding:15px 0;
+/* TABLE */
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.table th{
+  text-align:left;
+  padding:14px;
+  font-size:13px;
+  color:var(--muted);
   border-bottom:1px solid var(--border);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:20px;
 }
 
-.info{
-  flex:1;
+.table td{
+  padding:16px 14px;
+  border-bottom:1px solid var(--border);
 }
 
-.info b{
-  display:block;
-  margin-bottom:5px;
+.table tr:hover{
+  background:#0b1220;
 }
 
 .actions{
@@ -184,10 +192,7 @@ li{
   gap:8px;
 }
 
-/* STATUS */
-
-.status{
-  margin-top:10px;
+.small{
   color:var(--muted);
   font-size:13px;
 }
@@ -228,6 +233,7 @@ li{
 <div class="layout">
 
   <!-- SIDEBAR -->
+
   <aside class="sidebar">
 
     <div class="logo">
@@ -248,14 +254,14 @@ li{
   </aside>
 
   <!-- MAIN -->
+
   <main class="main">
 
-    <!-- TOPBAR -->
+    <!-- TOPO -->
+
     <div class="card">
 
-      <h2>
-        Dashboard
-      </h2>
+      <h2>Dashboard</h2>
 
       <div class="small">
         Painel geral do sistema
@@ -264,6 +270,7 @@ li{
     </div>
 
     <!-- CARDS -->
+
     <div style="
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -289,6 +296,7 @@ li{
     </div>
 
     <!-- FORM -->
+
     <div class="card">
 
       <h2>Novo Cliente</h2>
@@ -311,7 +319,8 @@ li{
 
     </div>
 
-    <!-- LISTA -->
+    <!-- TABELA -->
+
     <div class="card">
 
       <h2>Clientes</h2>
@@ -322,32 +331,26 @@ li{
         oninput="carregar()"
       >
 
-      <ul id="lista"></ul>
+      <table class="table">
+
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>Endereço</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+
+        <tbody id="lista"></tbody>
+
+      </table>
 
     </div>
 
   </main>
 
 </div>
-      </div>
-
-      <div class="card">
-
-        <h2>Clientes</h2>
-
-        <input
-          id="busca"
-          placeholder="Buscar cliente..."
-          oninput="carregar()"
-        >
-
-        <ul id="lista"></ul>
-
-      </div>
-
-    </main>
-
-  </div>
 
 </div>
 
@@ -415,7 +418,7 @@ function logout() {
   location.reload();
 }
 
-/* FETCH PROTEGIDO */
+/* FETCH */
 
 async function fetchAuth(url, options = {}) {
 
@@ -513,6 +516,8 @@ async function carregar(){
 
   const clientes = await res.json();
 
+  document.getElementById("totalClientes").innerText = clientes.length;
+
   const termo = document
     .getElementById("busca")
     .value
@@ -534,30 +539,42 @@ async function carregar(){
     )
     .forEach(c => {
 
-      const li = document.createElement("li");
+      const li = document.createElement("tr");
 
       li.innerHTML = `
-        <div class="info">
+        <td>
           <b>${c.nome}</b>
-          ${c.telefone}<br>
+        </td>
+
+        <td>
+          ${c.telefone}
+        </td>
+
+        <td>
           ${c.endereco}
-        </div>
+        </td>
 
-        <div class="actions">
-          <button
-            class="btn btn-warning"
-            onclick="editar('${c._id}', '${c.nome}', '${c.telefone}', '${c.endereco}')"
-          >
-            Editar
-          </button>
+        <td>
 
-          <button
-            class="btn btn-danger"
-            onclick="deletar('${c._id}')"
-          >
-            Excluir
-          </button>
-        </div>
+          <div class="actions">
+
+            <button
+              class="btn btn-warning"
+              onclick="editar('${c._id}', '${c.nome}', '${c.telefone}', '${c.endereco}')"
+            >
+              Editar
+            </button>
+
+            <button
+              class="btn btn-danger"
+              onclick="deletar('${c._id}')"
+            >
+              Excluir
+            </button>
+
+          </div>
+
+        </td>
       `;
 
       lista.appendChild(li);

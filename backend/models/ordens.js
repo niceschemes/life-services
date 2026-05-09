@@ -35,6 +35,6 @@ const OrdemSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model(
-  "ordens",
+  "Ordem",
   OrdemSchema
 );

@@ -14,15 +14,52 @@ router.get('/', auth, async (req, res) => {
 
   try {
 
-    const ordens = await Ordem.find()
+    const ordens = await Ordem
+      .find()
       .sort({ data: -1 });
 
     res.json(ordens);
 
   } catch (err) {
 
+    console.log(err);
+
     res.status(500).json({
       error: 'Erro ao buscar ordens'
+    });
+
+  }
+
+});
+
+/* =========================
+   BUSCAR ORDEM POR ID
+========================= */
+
+router.get('/:id', auth, async (req, res) => {
+
+  try {
+
+    const ordem = await Ordem.findById(
+      req.params.id
+    );
+
+    if(!ordem){
+
+      return res.status(404).json({
+        error: 'Ordem não encontrada'
+      });
+
+    }
+
+    res.json(ordem);
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      error: 'Erro ao buscar ordem'
     });
 
   }
@@ -37,25 +74,47 @@ router.post('/', auth, async (req, res) => {
 
   try {
 
+    const {
+      cliente,
+      descricao,
+      valor,
+      status,
+      observacoes
+    } = req.body;
+
+    if(
+      !cliente ||
+      !descricao ||
+      valor === undefined
+    ){
+
+      return res.status(400).json({
+        error: 'Preencha os campos obrigatórios'
+      });
+
+    }
+
     const novaOrdem = new Ordem({
 
-      cliente: req.body.cliente,
+      cliente,
 
-      descricao: req.body.descricao,
+      descricao,
 
-      valor: req.body.valor,
+      valor,
 
-      status: req.body.status,
+      status: status || 'Pendente',
 
-      observacoes: req.body.observacoes
+      observacoes: observacoes || ''
 
     });
 
     await novaOrdem.save();
 
-    res.json(novaOrdem);
+    res.status(201).json(novaOrdem);
 
   } catch (err) {
+
+    console.log(err);
 
     res.status(500).json({
       error: 'Erro ao criar ordem'
@@ -80,13 +139,26 @@ router.put('/:id', auth, async (req, res) => {
 
         req.body,
 
-        { new: true }
+        {
+          new: true,
+          runValidators: true
+        }
 
       );
+
+    if(!ordemAtualizada){
+
+      return res.status(404).json({
+        error: 'Ordem não encontrada'
+      });
+
+    }
 
     res.json(ordemAtualizada);
 
   } catch (err) {
+
+    console.log(err);
 
     res.status(500).json({
       error: 'Erro ao atualizar ordem'
@@ -104,15 +176,27 @@ router.delete('/:id', auth, async (req, res) => {
 
   try {
 
-    await Ordem.findByIdAndDelete(
-      req.params.id
-    );
+    const ordemDeletada =
+      await Ordem.findByIdAndDelete(
+        req.params.id
+      );
+
+    if(!ordemDeletada){
+
+      return res.status(404).json({
+        error: 'Ordem não encontrada'
+      });
+
+    }
 
     res.json({
-      ok: true
+      ok: true,
+      mensagem: 'Ordem deletada'
     });
 
   } catch (err) {
+
+    console.log(err);
 
     res.status(500).json({
       error: 'Erro ao deletar ordem'

@@ -210,7 +210,9 @@ body{
   gap:12px;
 }
 
-input{
+input,
+select,
+textarea{
   width:100%;
   padding:14px;
   border-radius:12px;
@@ -221,7 +223,9 @@ input{
   transition:0.2s;
 }
 
-input:focus{
+input:focus,
+select:focus,
+textarea:focus{
   outline:none;
   border-color:var(--primary);
   box-shadow:0 0 0 4px rgba(37,99,235,0.15);
@@ -264,6 +268,11 @@ input:focus{
 
 .btn-danger:hover{
   background:var(--danger-hover);
+}
+
+.btn-success{
+  background:var(--success);
+  color:white;
 }
 
 /* STATUS */
@@ -365,6 +374,18 @@ input:focus{
   color:white;
 }
 
+.hidden{
+  display:none;
+}
+
+.section{
+  display:none;
+}
+
+.section.active{
+  display:block;
+}
+
 @keyframes modalOpen{
 
   from{
@@ -377,11 +398,6 @@ input:focus{
     transform:scale(1);
   }
 
-}
-
-.small{
-  color:var(--muted);
-  font-size:13px;
 }
 
 .footer{
@@ -475,24 +491,20 @@ input:focus{
         Life Services
       </div>
 
-      <button class="active">
+      <button class="menu-btn active" onclick="abrirSecao('dashboard', this)">
         Dashboard
       </button>
 
-      <button>
+      <button class="menu-btn" onclick="abrirSecao('clientes', this)">
         Clientes
       </button>
 
-      <button>
-        Serviços
+      <button class="menu-btn" onclick="abrirSecao('ordens', this)">
+        Ordens de Serviço
       </button>
 
-      <button>
+      <button class="menu-btn" onclick="abrirSecao('financeiro', this)">
         Financeiro
-      </button>
-
-      <button>
-        Relatórios
       </button>
 
       <button class="logout" onclick="logout()">
@@ -505,156 +517,260 @@ input:focus{
 
     <main class="main">
 
-      <!-- TOPBAR -->
+      <!-- DASHBOARD -->
 
-      <div class="topbar">
+      <section id="dashboard" class="section active">
 
-        <div>
+        <div class="topbar">
 
-          <h1>
-            Dashboard
-          </h1>
+          <div>
 
-          <p>
-            Painel administrativo do sistema
-          </p>
+            <h1>
+              Dashboard
+            </h1>
+
+            <p>
+              Painel administrativo do sistema
+            </p>
+
+          </div>
+
+          <div class="badge">
+            Sistema Online
+          </div>
 
         </div>
 
-        <div class="badge">
-          Sistema Online
+        <div class="stats">
+
+          <div class="card">
+
+            <div class="stat-title">
+              Clientes
+            </div>
+
+            <div
+              class="stat-number"
+              id="totalClientes"
+            >
+              0
+            </div>
+
+          </div>
+
+          <div class="card">
+
+            <div class="stat-title">
+              Ordens de Serviço
+            </div>
+
+            <div
+              class="stat-number"
+              id="totalOrdens"
+            >
+              0
+            </div>
+
+          </div>
+
+          <div class="card">
+
+            <div class="stat-title">
+              Sistema
+            </div>
+
+            <div class="stat-number">
+              ON
+            </div>
+
+          </div>
+
         </div>
 
-      </div>
+      </section>
 
-      <!-- STATS -->
+      <!-- CLIENTES -->
 
-      <div class="stats">
+      <section id="clientes" class="section">
 
         <div class="card">
 
-          <div class="stat-title">
-            Clientes
+          <h2>
+            Novo Cliente
+          </h2>
+
+          <div class="form-grid">
+
+            <input
+              id="nome"
+              placeholder="Nome do cliente"
+            >
+
+            <input
+              id="telefone"
+              placeholder="Telefone"
+            >
+
+            <input
+              id="endereco"
+              placeholder="Endereço"
+            >
+
           </div>
+
+          <br>
+
+          <button
+            class="btn btn-primary"
+            onclick="cadastrar()"
+          >
+            Salvar Cliente
+          </button>
 
           <div
-            class="stat-number"
-            id="totalClientes"
-          >
-            0
-          </div>
-
-        </div>
-
-        <div class="card">
-
-          <div class="stat-title">
-            Serviços
-          </div>
-
-          <div
-            class="stat-number"
-            id="totalServicos"
-          >
-            12
-          </div>
-
-        </div>
-
-        <div class="card">
-
-          <div class="stat-title">
-            Financeiro
-          </div>
-
-          <div class="stat-number">
-            R$ 4.500
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- FORM -->
-
-      <div class="card">
-
-        <h2>
-          Novo Cliente
-        </h2>
-
-        <div class="form-grid">
-
-          <input
-            id="nome"
-            placeholder="Nome do cliente"
-          >
-
-          <input
-            id="telefone"
-            placeholder="Telefone"
-          >
-
-          <input
-            id="endereco"
-            placeholder="Endereço"
-          >
+            class="status"
+            id="status"
+          ></div>
 
         </div>
 
         <br>
 
-        <button
-          id="btnSalvar"
-          class="btn btn-primary"
-          onclick="cadastrar()"
-        >
-          Salvar Cliente
-        </button>
+        <div class="card">
 
-        <div
-          class="status"
-          id="status"
-        ></div>
+          <h2>
+            Clientes
+          </h2>
 
-      </div>
+          <input
+            id="busca"
+            placeholder="Buscar cliente..."
+            oninput="carregar()"
+          >
 
-      <!-- CLIENTES -->
+          <div class="table-wrapper">
 
-      <div class="card">
+            <table class="table">
 
-        <h2>
-          Clientes
-        </h2>
+              <thead>
 
-        <input
-          id="busca"
-          placeholder="Buscar cliente..."
-          oninput="carregar()"
-        >
+                <tr>
+                  <th>Nome</th>
+                  <th>Telefone</th>
+                  <th>Endereço</th>
+                  <th>Ações</th>
+                </tr>
 
-        <div class="table-wrapper">
+              </thead>
 
-          <table class="table">
+              <tbody id="lista"></tbody>
 
-            <thead>
+            </table>
 
-              <tr>
-                <th>Nome</th>
-                <th>Telefone</th>
-                <th>Endereço</th>
-                <th>Ações</th>
-              </tr>
-
-            </thead>
-
-            <tbody id="lista"></tbody>
-
-          </table>
+          </div>
 
         </div>
 
-      </div>
+      </section>
+
+      <!-- ORDENS -->
+
+      <section id="ordens" class="section">
+
+        <div class="card">
+
+          <h2>
+            Nova Ordem de Serviço
+          </h2>
+
+          <div class="form-grid">
+
+            <input
+              id="osCliente"
+              placeholder="Nome do cliente"
+            >
+
+            <input
+              id="osServico"
+              placeholder="Tipo de serviço"
+            >
+
+            <input
+              id="osValor"
+              placeholder="Valor"
+            >
+
+          </div>
+
+          <br>
+
+          <textarea
+            id="osDescricao"
+            placeholder="Descrição do serviço"
+            rows="4"
+          ></textarea>
+
+          <br><br>
+
+          <button
+            class="btn btn-success"
+            onclick="criarOS()"
+          >
+            Criar Ordem
+          </button>
+
+        </div>
+
+        <br>
+
+        <div class="card">
+
+          <h2>
+            Ordens de Serviço
+          </h2>
+
+          <div class="table-wrapper">
+
+            <table class="table">
+
+              <thead>
+
+                <tr>
+                  <th>Cliente</th>
+                  <th>Serviço</th>
+                  <th>Valor</th>
+                  <th>Status</th>
+                </tr>
+
+              </thead>
+
+              <tbody id="listaOrdens"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- FINANCEIRO -->
+
+      <section id="financeiro" class="section">
+
+        <div class="card">
+
+          <h2>
+            Financeiro
+          </h2>
+
+          <p style="color:var(--muted);">
+            Área financeira em desenvolvimento.
+          </p>
+
+        </div>
+
+      </section>
 
     </main>
 
@@ -728,6 +844,28 @@ let TOKEN = localStorage.getItem("token");
 
 let editando = null;
 
+let ordens = [];
+
+/* MENU */
+
+function abrirSecao(secao,btn){
+
+  document
+  .querySelectorAll(".section")
+  .forEach(s => s.classList.remove("active"));
+
+  document
+  .getElementById(secao)
+  .classList.add("active");
+
+  document
+  .querySelectorAll(".menu-btn")
+  .forEach(b => b.classList.remove("active"));
+
+  btn.classList.add("active");
+
+}
+
 /* LOGIN */
 
 function checarLogin(){
@@ -749,6 +887,8 @@ function checarLogin(){
   document.getElementById("app").style.display = "block";
 
   carregar();
+
+  carregarOrdens();
 
 }
 
@@ -837,9 +977,7 @@ async function fetchAuth(url,options = {}){
 
       localStorage.removeItem("token");
 
-      document.getElementById("loginBox").style.display = "flex";
-
-      document.getElementById("app").style.display = "none";
+      location.reload();
 
       return null;
 
@@ -871,7 +1009,7 @@ function setStatus(msg){
 
 }
 
-/* CRUD */
+/* CLIENTES */
 
 async function cadastrar(){
 
@@ -891,8 +1029,6 @@ async function cadastrar(){
     return;
 
   }
-
-  setStatus("Salvando cliente...");
 
   const res = await fetchAuth(API,{
 
@@ -979,17 +1115,11 @@ async function carregar(){
 
     tr.innerHTML = `
 
-      <td>
-        <b>${c.nome}</b>
-      </td>
+      <td><b>${c.nome}</b></td>
 
-      <td>
-        ${c.telefone}
-      </td>
+      <td>${c.telefone}</td>
 
-      <td>
-        ${c.endereco}
-      </td>
+      <td>${c.endereco}</td>
 
       <td>
 
@@ -1051,27 +1181,13 @@ function fecharModal(){
 async function salvarEdicao(){
 
   const nome =
-  document.getElementById("editNome")
-  .value
-  .trim();
+  document.getElementById("editNome").value.trim();
 
   const telefone =
-  document.getElementById("editTelefone")
-  .value
-  .trim();
+  document.getElementById("editTelefone").value.trim();
 
   const endereco =
-  document.getElementById("editEndereco")
-  .value
-  .trim();
-
-  if(!nome || !telefone || !endereco){
-
-    alert("Preencha todos os campos");
-
-    return;
-
-  }
+  document.getElementById("editEndereco").value.trim();
 
   await fetchAuth(API + "/" + editando,{
 
@@ -1108,6 +1224,107 @@ async function deletar(id){
   carregar();
 
   setStatus("Cliente removido");
+
+}
+
+/* ORDENS */
+
+function criarOS(){
+
+  const cliente =
+  document.getElementById("osCliente").value;
+
+  const servico =
+  document.getElementById("osServico").value;
+
+  const valor =
+  document.getElementById("osValor").value;
+
+  const descricao =
+  document.getElementById("osDescricao").value;
+
+  if(!cliente || !servico || !valor){
+
+    alert("Preencha os campos");
+
+    return;
+
+  }
+
+  ordens.push({
+    cliente,
+    servico,
+    valor,
+    descricao,
+    status:"Aberta"
+  });
+
+  localStorage.setItem(
+    "ordens",
+    JSON.stringify(ordens)
+  );
+
+  document.getElementById("osCliente").value = "";
+
+  document.getElementById("osServico").value = "";
+
+  document.getElementById("osValor").value = "";
+
+  document.getElementById("osDescricao").value = "";
+
+  carregarOrdens();
+
+}
+
+function carregarOrdens(){
+
+  ordens =
+  JSON.parse(localStorage.getItem("ordens"))
+  || [];
+
+  document.getElementById("totalOrdens")
+  .innerText = ordens.length;
+
+  const lista =
+  document.getElementById("listaOrdens");
+
+  lista.innerHTML = "";
+
+  if(ordens.length === 0){
+
+    lista.innerHTML = `
+      <tr>
+        <td colspan="4">
+          <div class="empty">
+            Nenhuma ordem cadastrada
+          </div>
+        </td>
+      </tr>
+    `;
+
+    return;
+
+  }
+
+  ordens.forEach(o => {
+
+    lista.innerHTML += `
+
+      <tr>
+
+        <td>${o.cliente}</td>
+
+        <td>${o.servico}</td>
+
+        <td>R$ ${o.valor}</td>
+
+        <td>${o.status}</td>
+
+      </tr>
+
+    `;
+
+  });
 
 }
 

@@ -65,6 +65,16 @@ app.use(
   authRoutes
 );
 
+/* SERVIÇOS */
+
+const servicosRoutes =
+require('./routes/servicos');
+
+app.use(
+  '/servicos',
+  servicosRoutes
+);
+
 /* ORDENS DE SERVIÇO */
 
 const ordensRoutes =

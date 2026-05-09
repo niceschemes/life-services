@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ServicoSchema = new mongoose.Schema({
+const servicoSchema = new mongoose.Schema({
 
   cliente:{
     type:String,
@@ -30,6 +30,6 @@ const ServicoSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model(
-  'Servico',
-  ServicoSchema
+  'servico',
+  servicoSchema
 );

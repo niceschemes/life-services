@@ -1,15 +1,14 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Life Services</title>
+<title>Life Services</title>
 
-  <link rel="icon" type="image/png" href="favicon.png">
-
-  <style>
+<style>
 
 :root{
   --bg:#0f172a;
@@ -19,12 +18,9 @@
   --text:#e5e7eb;
   --muted:#94a3b8;
   --primary:#2563eb;
-  --primary-hover:#1d4ed8;
-  --danger:#dc2626;
-  --danger-hover:#b91c1c;
-  --warning:#f59e0b;
-  --warning-hover:#d97706;
   --success:#16a34a;
+  --danger:#dc2626;
+  --warning:#f59e0b;
 }
 
 *{
@@ -33,90 +29,41 @@
   box-sizing:border-box;
 }
 
-html{
-  scroll-behavior:smooth;
-}
-
 body{
-  font-family:Inter,system-ui,sans-serif;
   background:var(--bg);
   color:var(--text);
+  font-family:Arial, sans-serif;
 }
-
-/* LOGIN */
-
-.login-screen{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  background:
-    radial-gradient(circle at top,#1e293b 0%,#0f172a 60%);
-}
-
-.login-card{
-  width:100%;
-  max-width:420px;
-  background:rgba(17,24,39,0.95);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:35px;
-  backdrop-filter:blur(12px);
-  box-shadow:0 20px 60px rgba(0,0,0,0.45);
-}
-
-.login-card h1{
-  font-size:30px;
-  margin-bottom:10px;
-  text-align:center;
-}
-
-.login-card p{
-  text-align:center;
-  color:var(--muted);
-  margin-bottom:25px;
-  font-size:14px;
-  line-height:1.5;
-}
-
-/* APP */
 
 .layout{
   display:flex;
   min-height:100vh;
 }
 
-/* SIDEBAR */
-
 .sidebar{
   width:260px;
   background:var(--sidebar);
+  padding:20px;
   border-right:1px solid var(--border);
-  padding:24px;
-  display:flex;
-  flex-direction:column;
 }
 
 .logo{
-  font-size:24px;
-  font-weight:700;
-  margin-bottom:40px;
+  font-size:26px;
+  font-weight:bold;
+  margin-bottom:30px;
 }
 
 .sidebar button{
   width:100%;
+  margin-bottom:10px;
   padding:14px;
   border:none;
   border-radius:12px;
   background:transparent;
   color:var(--muted);
-  text-align:left;
   cursor:pointer;
-  transition:0.2s;
-  margin-bottom:8px;
-  font-size:14px;
-  font-weight:600;
+  text-align:left;
+  font-weight:bold;
 }
 
 .sidebar button:hover{
@@ -129,245 +76,9 @@ body{
   color:white;
 }
 
-.logout{
-  margin-top:auto;
-}
-
-/* MAIN */
-
 .main{
   flex:1;
-  padding:30px;
-}
-
-/* HEADER */
-
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:20px;
-  margin-bottom:25px;
-  flex-wrap:wrap;
-}
-
-.topbar h1{
-  font-size:32px;
-}
-
-.topbar p{
-  color:var(--muted);
-  margin-top:5px;
-}
-
-.badge{
-  background:#13213d;
-  border:1px solid #1e3a8a;
-  color:#93c5fd;
-  padding:10px 14px;
-  border-radius:12px;
-  font-size:13px;
-}
-
-/* STATS */
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
-  margin-bottom:25px;
-}
-
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:22px;
-  box-shadow:0 8px 30px rgba(0,0,0,0.15);
-}
-
-.card h2{
-  font-size:20px;
-  margin-bottom:18px;
-}
-
-.stat-title{
-  color:var(--muted);
-  font-size:14px;
-  margin-bottom:10px;
-}
-
-.stat-number{
-  font-size:34px;
-  font-weight:700;
-}
-
-/* FORM */
-
-.form-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:12px;
-}
-
-input,
-select,
-textarea{
-  width:100%;
-  padding:14px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:#0b1220;
-  color:white;
-  font-size:14px;
-  transition:0.2s;
-}
-
-input:focus,
-select:focus,
-textarea:focus{
-  outline:none;
-  border-color:var(--primary);
-  box-shadow:0 0 0 4px rgba(37,99,235,0.15);
-}
-
-/* BUTTONS */
-
-.btn{
-  border:none;
-  border-radius:12px;
-  padding:12px 16px;
-  cursor:pointer;
-  transition:0.2s;
-  font-size:14px;
-  font-weight:600;
-}
-
-.btn-primary{
-  background:var(--primary);
-  color:white;
-}
-
-.btn-primary:hover{
-  background:var(--primary-hover);
-}
-
-.btn-warning{
-  background:var(--warning);
-  color:black;
-}
-
-.btn-warning:hover{
-  background:var(--warning-hover);
-}
-
-.btn-danger{
-  background:var(--danger);
-  color:white;
-}
-
-.btn-danger:hover{
-  background:var(--danger-hover);
-}
-
-.btn-success{
-  background:var(--success);
-  color:white;
-}
-
-.status{
-  margin-top:15px;
-  color:#86efac;
-  font-size:13px;
-  font-weight:600;
-}
-
-/* TABLE */
-
-.table-wrapper{
-  overflow:auto;
-  margin-top:15px;
-}
-
-.table{
-  width:100%;
-  border-collapse:collapse;
-}
-
-.table th{
-  text-align:left;
-  padding:16px;
-  color:var(--muted);
-  font-size:13px;
-  border-bottom:1px solid var(--border);
-}
-
-.table td{
-  padding:18px 16px;
-  border-bottom:1px solid var(--border);
-}
-
-.table tr{
-  transition:0.2s;
-}
-
-.table tr:hover{
-  background:#0b1220;
-}
-
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.empty{
-  text-align:center;
-  color:var(--muted);
-  padding:30px;
-}
-
-/* MODAL */
-
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.7);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:999;
-  backdrop-filter:blur(4px);
-  padding:20px;
-}
-
-.modal-content{
-  width:100%;
-  max-width:520px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:18px;
   padding:25px;
-  animation:modalOpen 0.2s ease;
-}
-
-.modal-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
-
-.close-btn{
-  background:none;
-  border:none;
-  color:var(--muted);
-  font-size:24px;
-  cursor:pointer;
-}
-
-.close-btn:hover{
-  color:white;
 }
 
 .section{
@@ -378,25 +89,126 @@ textarea:focus{
   display:block;
 }
 
-@keyframes modalOpen{
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:20px;
+}
 
-  from{
-    opacity:0;
-    transform:scale(0.95);
-  }
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
 
-  to{
-    opacity:1;
-    transform:scale(1);
-  }
+.stat-title{
+  color:var(--muted);
+  margin-bottom:10px;
+}
 
+.stat-number{
+  font-size:32px;
+  font-weight:bold;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:12px;
+}
+
+input,
+textarea,
+select{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#0b1220;
+  color:white;
+}
+
+button{
+  cursor:pointer;
+}
+
+.btn{
+  border:none;
+  border-radius:12px;
+  padding:12px 16px;
+  font-weight:bold;
+}
+
+.btn-primary{
+  background:var(--primary);
+  color:white;
+}
+
+.btn-success{
+  background:var(--success);
+  color:white;
+}
+
+.btn-danger{
+  background:var(--danger);
+  color:white;
+}
+
+.btn-warning{
+  background:var(--warning);
+  color:black;
+}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+}
+
+.table th,
+.table td{
+  padding:16px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.login-screen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.login-card{
+  width:100%;
+  max-width:420px;
+  background:var(--card);
+  padding:30px;
+  border-radius:20px;
+  border:1px solid var(--border);
+}
+
+.login-card h1{
+  margin-bottom:15px;
+}
+
+.login-card p{
+  color:var(--muted);
+  margin-bottom:20px;
 }
 
 .footer{
   margin-top:20px;
   text-align:center;
   color:var(--muted);
-  font-size:12px;
 }
 
 @media(max-width:900px){
@@ -409,17 +221,9 @@ textarea:focus{
     width:100%;
   }
 
-  .main{
-    padding:20px;
-  }
-
-  .topbar h1{
-    font-size:26px;
-  }
-
 }
 
-  </style>
+</style>
 
 </head>
 
@@ -434,7 +238,7 @@ textarea:focus{
     <h1>Life Services</h1>
 
     <p>
-      Sistema inteligente de gerenciamento empresarial
+      Sistema inteligente empresarial
     </p>
 
     <input
@@ -448,7 +252,7 @@ textarea:focus{
       id="senha"
       type="password"
       placeholder="Senha"
-      onkeypress="if(event.key === 'Enter') login()"
+      onkeypress="if(event.key==='Enter') login()"
     >
 
     <br><br>
@@ -458,7 +262,7 @@ textarea:focus{
       style="width:100%;"
       onclick="login()"
     >
-      Entrar no Sistema
+      Entrar
     </button>
 
     <div class="footer">
@@ -473,361 +277,356 @@ textarea:focus{
 
 <div id="app" style="display:none;">
 
-  <div class="layout">
-
-    <aside class="sidebar">
-
-      <div class="logo">
-        Life Services
-      </div>
-
-      <button class="menu-btn active" onclick="abrirSecao('dashboard', this)">
-        Dashboard
-      </button>
-
-      <button class="menu-btn" onclick="abrirSecao('clientes', this)">
-        Clientes
-      </button>
-
-      <button class="menu-btn" onclick="abrirSecao('ordens', this)">
-        Ordens de Serviço
-      </button>
-
-      <button class="menu-btn" onclick="abrirSecao('financeiro', this)">
-        Financeiro
-      </button>
-
-      <button class="logout" onclick="logout()">
-        Sair
-      </button>
-
-    </aside>
-
-    <main class="main">
-
-      <!-- DASHBOARD -->
-
-      <section id="dashboard" class="section active">
-
-        <div class="topbar">
-
-          <div>
-
-            <h1>Dashboard</h1>
-
-            <p>
-              Painel administrativo do sistema
-            </p>
-
-          </div>
-
-          <div class="badge">
-            Sistema Online
-          </div>
-
-        </div>
-
-        <div class="stats">
-
-          <div class="card">
-
-            <div class="stat-title">
-              Clientes
-            </div>
-
-            <div class="stat-number" id="totalClientes">
-              0
-            </div>
-
-          </div>
-
-          <div class="card">
-
-            <div class="stat-title">
-              Ordens de Serviço
-            </div>
-
-            <div class="stat-number" id="totalOrdens">
-              0
-            </div>
-
-          </div>
-
-          <div class="card">
-
-            <div class="stat-title">
-              Sistema
-            </div>
-
-            <div class="stat-number">
-              ON
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      <!-- CLIENTES -->
-
-      <section id="clientes" class="section">
-
-        <div class="card">
-
-          <h2>Novo Cliente</h2>
-
-          <div class="form-grid">
-
-            <input
-              id="nome"
-              placeholder="Nome do cliente"
-            >
-
-            <input
-              id="telefone"
-              placeholder="Telefone"
-            >
-
-            <input
-              id="endereco"
-              placeholder="Endereço"
-            >
-
-          </div>
-
-          <br>
-
-          <button
-            class="btn btn-primary"
-            onclick="cadastrar()"
-          >
-            Salvar Cliente
-          </button>
-
-          <div class="status" id="status"></div>
-
-        </div>
-
-        <br>
-
-        <div class="card">
-
-          <h2>Clientes</h2>
-
-          <input
-            id="busca"
-            placeholder="Buscar cliente..."
-            oninput="carregar()"
-          >
-
-          <div class="table-wrapper">
-
-            <table class="table">
-
-              <thead>
-
-                <tr>
-                  <th>Nome</th>
-                  <th>Telefone</th>
-                  <th>Endereço</th>
-                  <th>Ações</th>
-                </tr>
-
-              </thead>
-
-              <tbody id="lista"></tbody>
-
-            </table>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      <!-- ORDENS -->
-
-      <section id="ordens" class="section">
-
-        <div class="card">
-
-          <h2>Nova Ordem de Serviço</h2>
-
-          <div class="form-grid">
-
-            <input
-              id="osCliente"
-              placeholder="Nome do cliente"
-            >
-
-            <input
-              id="osServico"
-              placeholder="Tipo de serviço"
-            >
-
-            <input
-              id="osValor"
-              placeholder="Valor"
-            >
-
-          </div>
-
-          <br>
-
-          <textarea
-            id="osDescricao"
-            placeholder="Descrição do serviço"
-            rows="4"
-          ></textarea>
-
-          <br><br>
-
-          <button
-            class="btn btn-success"
-            onclick="criarOS()"
-          >
-            Criar Ordem
-          </button>
-
-        </div>
-
-        <br>
-
-        <div class="card">
-
-          <h2>Ordens de Serviço</h2>
-
-          <div class="table-wrapper">
-
-            <table class="table">
-
-              <thead>
-
-                <tr>
-                  <th>Cliente</th>
-                  <th>Serviço</th>
-                  <th>Valor</th>
-                  <th>Status</th>
-                </tr>
-
-              </thead>
-
-              <tbody id="listaOrdens"></tbody>
-
-            </table>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      <!-- FINANCEIRO -->
-
-      <section id="financeiro" class="section">
-
-        <div class="card">
-
-          <h2>Financeiro</h2>
-
-          <p style="color:var(--muted);">
-            Área financeira em desenvolvimento.
-          </p>
-
-        </div>
-
-      </section>
-
-    </main>
-
-  </div>
+<div class="layout">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<div class="logo">
+Life Services
+</div>
+
+<button
+class="menu-btn active"
+onclick="abrirSecao('dashboard',this)"
+>
+Dashboard
+</button>
+
+<button
+class="menu-btn"
+onclick="abrirSecao('clientes',this)"
+>
+Clientes
+</button>
+
+<button
+class="menu-btn"
+onclick="abrirSecao('ordens',this)"
+>
+Ordens
+</button>
+
+<button
+class="menu-btn"
+onclick="abrirSecao('financeiro',this)"
+>
+Financeiro
+</button>
+
+<button
+class="btn btn-danger"
+onclick="logout()"
+>
+Sair
+</button>
+
+</aside>
+
+<!-- MAIN -->
+
+<main class="main">
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="section active">
+
+<div class="stats">
+
+<div class="card">
+<div class="stat-title">
+Clientes
+</div>
+
+<div
+class="stat-number"
+id="totalClientes"
+>
+0
+</div>
+</div>
+
+<div class="card">
+<div class="stat-title">
+Ordens
+</div>
+
+<div
+class="stat-number"
+id="totalOrdens"
+>
+0
+</div>
+</div>
+
+<div class="card">
+<div class="stat-title">
+Faturamento
+</div>
+
+<div
+class="stat-number"
+id="faturamento"
+>
+R$ 0
+</div>
+</div>
+
+<div class="card">
+<div class="stat-title">
+Pendentes
+</div>
+
+<div
+class="stat-number"
+id="pendentes"
+>
+0
+</div>
+</div>
 
 </div>
 
-<!-- MODAL -->
+</section>
 
-<div class="modal" id="modal">
+<!-- CLIENTES -->
 
-  <div class="modal-content">
+<section id="clientes" class="section">
 
-    <div class="modal-header">
+<div class="card">
 
-      <h2>Editar Cliente</h2>
+<h2>Novo Cliente</h2>
 
-      <button
-        class="close-btn"
-        onclick="fecharModal()"
-      >
-        ✕
-      </button>
+<br>
 
-    </div>
+<div class="form-grid">
 
-    <input
-      id="editNome"
-      placeholder="Nome"
-    >
+<input
+id="nome"
+placeholder="Nome"
+>
 
-    <br><br>
+<input
+id="telefone"
+placeholder="Telefone"
+>
 
-    <input
-      id="editTelefone"
-      placeholder="Telefone"
-    >
+<input
+id="endereco"
+placeholder="Endereço"
+>
 
-    <br><br>
+</div>
 
-    <input
-      id="editEndereco"
-      placeholder="Endereço"
-    >
+<br>
 
-    <br><br>
+<button
+class="btn btn-primary"
+onclick="cadastrarCliente()"
+>
+Salvar Cliente
+</button>
 
-    <button
-      class="btn btn-primary"
-      style="width:100%;"
-      onclick="salvarEdicao()"
-    >
-      Salvar Alterações
-    </button>
+</div>
 
-  </div>
+<div class="card">
+
+<h2>Clientes</h2>
+
+<table class="table">
+
+<thead>
+
+<tr>
+<th>Nome</th>
+<th>Telefone</th>
+<th>Endereço</th>
+<th>Ações</th>
+</tr>
+
+</thead>
+
+<tbody id="listaClientes"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+<!-- ORDENS -->
+
+<section id="ordens" class="section">
+
+<div class="card">
+
+<h2>Nova Ordem</h2>
+
+<br>
+
+<div class="form-grid">
+
+<input
+id="osCliente"
+placeholder="Cliente"
+>
+
+<input
+id="osValor"
+placeholder="Valor"
+>
+
+<select id="osStatus">
+
+<option>Pendente</option>
+<option>Em andamento</option>
+<option>Concluído</option>
+
+</select>
+
+</div>
+
+<br>
+
+<textarea
+id="osDescricao"
+placeholder="Descrição"
+rows="4"
+></textarea>
+
+<br><br>
+
+<button
+class="btn btn-success"
+onclick="criarOS()"
+>
+Criar Ordem
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>Ordens</h2>
+
+<table class="table">
+
+<thead>
+
+<tr>
+<th>Cliente</th>
+<th>Descrição</th>
+<th>Valor</th>
+<th>Status</th>
+<th>Ações</th>
+</tr>
+
+</thead>
+
+<tbody id="listaOrdens"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+<!-- FINANCEIRO -->
+
+<section id="financeiro" class="section">
+
+<div class="stats">
+
+<div class="card">
+
+<div class="stat-title">
+Faturamento Total
+</div>
+
+<div
+class="stat-number"
+id="financeiroTotal"
+>
+R$ 0
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="stat-title">
+Ordens Concluídas
+</div>
+
+<div
+class="stat-number"
+id="financeiroConcluidas"
+>
+0
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="stat-title">
+Ordens Pendentes
+</div>
+
+<div
+class="stat-number"
+id="financeiroPendentes"
+>
+0
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
 
 </div>
 
 <script>
 
-const API =
-"https://life-services-wiq6.onrender.com/clientes";
+const BASE =
+"https://life-services-wiq6.onrender.com";
+
+const API_CLIENTES =
+BASE + "/clientes";
+
+const API_ORDENS =
+BASE + "/ordens";
 
 const AUTH =
-"https://life-services-wiq6.onrender.com/auth/login";
+BASE + "/auth/login";
 
-let TOKEN = localStorage.getItem("token");
-
-let editando = null;
-
-let ordens = [];
+let TOKEN =
+localStorage.getItem("token");
 
 /* MENU */
 
 function abrirSecao(secao,btn){
 
-  document
-  .querySelectorAll(".section")
-  .forEach(s => s.classList.remove("active"));
+document
+.querySelectorAll(".section")
+.forEach(s=>s.classList.remove("active"));
 
-  document
-  .getElementById(secao)
-  .classList.add("active");
+document
+.getElementById(secao)
+.classList.add("active");
 
-  document
-  .querySelectorAll(".menu-btn")
-  .forEach(b => b.classList.remove("active"));
+document
+.querySelectorAll(".menu-btn")
+.forEach(b=>b.classList.remove("active"));
 
-  btn.classList.add("active");
+btn.classList.add("active");
 
 }
 
@@ -835,457 +634,389 @@ function abrirSecao(secao,btn){
 
 function checarLogin(){
 
-  TOKEN = localStorage.getItem("token");
+if(!TOKEN){
 
-  if(!TOKEN){
+document.getElementById("loginBox")
+.style.display = "flex";
 
-    document.getElementById("loginBox").style.display = "flex";
+document.getElementById("app")
+.style.display = "none";
 
-    document.getElementById("app").style.display = "none";
+return;
 
-    return;
+}
 
-  }
+document.getElementById("loginBox")
+.style.display = "none";
 
-  document.getElementById("loginBox").style.display = "none";
+document.getElementById("app")
+.style.display = "block";
 
-  document.getElementById("app").style.display = "block";
+carregarClientes();
 
-  carregar();
-
-  carregarOrdens();
+carregarOrdens();
 
 }
 
 async function login(){
 
-  const usuario =
-  document.getElementById("usuario").value.trim();
+const usuario =
+document.getElementById("usuario")
+.value.trim();
 
-  const senha =
-  document.getElementById("senha").value.trim();
+const senha =
+document.getElementById("senha")
+.value.trim();
 
-  if(!usuario || !senha){
+const res = await fetch(AUTH,{
 
-    alert("Preencha usuário e senha");
+method:"POST",
 
-    return;
+headers:{
+"Content-Type":"application/json"
+},
 
-  }
+body:JSON.stringify({
+usuario,
+senha
+})
 
-  try{
+});
 
-    const res = await fetch(AUTH,{
+const data = await res.json();
 
-      method:"POST",
+if(data.token){
 
-      headers:{
-        "Content-Type":"application/json"
-      },
+localStorage.setItem(
+"token",
+data.token
+);
 
-      body:JSON.stringify({
-        usuario,
-        senha
-      })
+location.reload();
 
-    });
+}else{
 
-    const data = await res.json();
+alert("Login inválido");
 
-    if(data.token){
-
-      localStorage.setItem("token",data.token);
-
-      location.reload();
-
-    }else{
-
-      alert(data.error || "Login inválido");
-
-    }
-
-  }catch(err){
-
-    alert("Erro ao conectar com servidor");
-
-  }
+}
 
 }
 
 function logout(){
 
-  localStorage.removeItem("token");
+localStorage.removeItem("token");
 
-  location.reload();
-
-}
-
-async function fetchAuth(url,options = {}){
-
-  try{
-
-    const res = await fetch(url,{
-
-      ...options,
-
-      headers:{
-        ...(options.headers || {}),
-        "Content-Type":"application/json",
-        "Authorization":"Bearer " + TOKEN
-      }
-
-    });
-
-    if(res.status === 401){
-
-      localStorage.removeItem("token");
-
-      location.reload();
-
-      return null;
-
-    }
-
-    return res;
-
-  }catch(err){
-
-    alert("Erro de conexão");
-
-    return null;
-
-  }
+location.reload();
 
 }
 
-/* STATUS */
+/* FETCH AUTH */
 
-function setStatus(msg){
+async function fetchAuth(url,options={}){
 
-  document.getElementById("status").innerText = msg;
+const res = await fetch(url,{
 
-  setTimeout(() => {
+...options,
 
-    document.getElementById("status").innerText = "";
+headers:{
+...(options.headers || {}),
+"Content-Type":"application/json",
+"Authorization":"Bearer " + TOKEN
+}
 
-  },3000);
+});
+
+return res;
 
 }
 
 /* CLIENTES */
 
-async function cadastrar(){
+async function cadastrarCliente(){
 
-  const nome =
-  document.getElementById("nome").value.trim();
+const nome =
+document.getElementById("nome")
+.value;
 
-  const telefone =
-  document.getElementById("telefone").value.trim();
+const telefone =
+document.getElementById("telefone")
+.value;
 
-  const endereco =
-  document.getElementById("endereco").value.trim();
+const endereco =
+document.getElementById("endereco")
+.value;
 
-  if(!nome || !telefone || !endereco){
+await fetchAuth(API_CLIENTES,{
 
-    alert("Preencha todos os campos");
+method:"POST",
 
-    return;
+body:JSON.stringify({
+nome,
+telefone,
+endereco
+})
 
-  }
+});
 
-  const res = await fetchAuth(API,{
+document.getElementById("nome").value="";
+document.getElementById("telefone").value="";
+document.getElementById("endereco").value="";
 
-    method:"POST",
-
-    body:JSON.stringify({
-      nome,
-      telefone,
-      endereco
-    })
-
-  });
-
-  if(!res) return;
-
-  limpar();
-
-  carregar();
-
-  setStatus("Cliente salvo com sucesso");
+carregarClientes();
 
 }
 
-function limpar(){
+async function carregarClientes(){
 
-  document.getElementById("nome").value = "";
+const res =
+await fetchAuth(API_CLIENTES);
 
-  document.getElementById("telefone").value = "";
+const clientes =
+await res.json();
 
-  document.getElementById("endereco").value = "";
+document.getElementById(
+"totalClientes"
+).innerText = clientes.length;
 
-}
+const lista =
+document.getElementById(
+"listaClientes"
+);
 
-async function carregar(){
+lista.innerHTML = "";
 
-  const res = await fetchAuth(API);
+clientes.forEach(c=>{
 
-  if(!res) return;
+lista.innerHTML += `
 
-  const clientes = await res.json();
+<tr>
 
-  document.getElementById("totalClientes")
-  .innerText = clientes.length;
+<td>${c.nome}</td>
 
-  const termo =
-  document.getElementById("busca").value.toLowerCase();
+<td>${c.telefone}</td>
 
-  const lista =
-  document.getElementById("lista");
+<td>${c.endereco}</td>
 
-  lista.innerHTML = "";
+<td>
 
-  const filtrados = clientes.filter(c =>
+<div class="actions">
 
-    c.nome.toLowerCase().includes(termo) ||
+<button
+class="btn btn-danger"
+onclick="deletarCliente('${c._id}')"
+>
+Excluir
+</button>
 
-    c.telefone.toLowerCase().includes(termo) ||
+</div>
 
-    c.endereco.toLowerCase().includes(termo)
+</td>
 
-  );
+</tr>
 
-  if(filtrados.length === 0){
+`;
 
-    lista.innerHTML = `
-      <tr>
-        <td colspan="4">
-          <div class="empty">
-            Nenhum cliente encontrado
-          </div>
-        </td>
-      </tr>
-    `;
-
-    return;
-
-  }
-
-  filtrados.forEach(c => {
-
-    const tr = document.createElement("tr");
-
-    tr.innerHTML = `
-
-      <td><b>${c.nome}</b></td>
-
-      <td>${c.telefone}</td>
-
-      <td>${c.endereco}</td>
-
-      <td>
-
-        <div class="actions">
-
-          <button
-            class="btn btn-warning"
-            onclick="editar(
-              '${c._id}',
-              '${c.nome}',
-              '${c.telefone}',
-              '${c.endereco}'
-            )"
-          >
-            Editar
-          </button>
-
-          <button
-            class="btn btn-danger"
-            onclick="deletar('${c._id}')"
-          >
-            Excluir
-          </button>
-
-        </div>
-
-      </td>
-
-    `;
-
-    lista.appendChild(tr);
-
-  });
+});
 
 }
 
-/* EDITAR */
+async function deletarCliente(id){
 
-function editar(id,nome,telefone,endereco){
-
-  document.getElementById("modal").style.display = "flex";
-
-  document.getElementById("editNome").value = nome;
-
-  document.getElementById("editTelefone").value = telefone;
-
-  document.getElementById("editEndereco").value = endereco;
-
-  editando = id;
-
+await fetchAuth(
+API_CLIENTES + "/" + id,
+{
+method:"DELETE"
 }
+);
 
-function fecharModal(){
-
-  document.getElementById("modal").style.display = "none";
-
-}
-
-async function salvarEdicao(){
-
-  const nome =
-  document.getElementById("editNome").value.trim();
-
-  const telefone =
-  document.getElementById("editTelefone").value.trim();
-
-  const endereco =
-  document.getElementById("editEndereco").value.trim();
-
-  await fetchAuth(API + "/" + editando,{
-
-    method:"PUT",
-
-    body:JSON.stringify({
-      nome,
-      telefone,
-      endereco
-    })
-
-  });
-
-  fecharModal();
-
-  carregar();
-
-  setStatus("Cliente atualizado");
-
-}
-
-/* DELETE */
-
-async function deletar(id){
-
-  if(!confirm("Excluir cliente?")) return;
-
-  await fetchAuth(API + "/" + id,{
-
-    method:"DELETE"
-
-  });
-
-  carregar();
-
-  setStatus("Cliente removido");
+carregarClientes();
 
 }
 
 /* ORDENS */
 
-function criarOS(){
+async function criarOS(){
 
-  const cliente =
-  document.getElementById("osCliente").value;
+const cliente =
+document.getElementById("osCliente")
+.value;
 
-  const servico =
-  document.getElementById("osServico").value;
+const valor =
+document.getElementById("osValor")
+.value;
 
-  const valor =
-  document.getElementById("osValor").value;
+const status =
+document.getElementById("osStatus")
+.value;
 
-  const descricao =
-  document.getElementById("osDescricao").value;
+const descricao =
+document.getElementById("osDescricao")
+.value;
 
-  if(!cliente || !servico || !valor){
+await fetchAuth(API_ORDENS,{
 
-    alert("Preencha os campos");
+method:"POST",
 
-    return;
+body:JSON.stringify({
 
-  }
+cliente,
+descricao,
+valor,
+status
 
-  ordens.push({
-    cliente,
-    servico,
-    valor,
-    descricao,
-    status:"Aberta"
-  });
+})
 
-  localStorage.setItem(
-    "ordens",
-    JSON.stringify(ordens)
-  );
+});
 
-  document.getElementById("osCliente").value = "";
+document.getElementById("osCliente").value="";
+document.getElementById("osValor").value="";
+document.getElementById("osDescricao").value="";
 
-  document.getElementById("osServico").value = "";
-
-  document.getElementById("osValor").value = "";
-
-  document.getElementById("osDescricao").value = "";
-
-  carregarOrdens();
+carregarOrdens();
 
 }
 
-function carregarOrdens(){
+async function carregarOrdens(){
 
-  ordens =
-  JSON.parse(localStorage.getItem("ordens"))
-  || [];
+const res =
+await fetchAuth(API_ORDENS);
 
-  document.getElementById("totalOrdens")
-  .innerText = ordens.length;
+const ordens =
+await res.json();
 
-  const lista =
-  document.getElementById("listaOrdens");
+document.getElementById(
+"totalOrdens"
+).innerText = ordens.length;
 
-  lista.innerHTML = "";
+const lista =
+document.getElementById(
+"listaOrdens"
+);
 
-  if(ordens.length === 0){
+lista.innerHTML = "";
 
-    lista.innerHTML = `
-      <tr>
-        <td colspan="4">
-          <div class="empty">
-            Nenhuma ordem cadastrada
-          </div>
-        </td>
-      </tr>
-    `;
+let total = 0;
+let pendentes = 0;
+let concluidas = 0;
 
-    return;
+ordens.forEach(o=>{
 
-  }
+total += Number(o.valor);
 
-  ordens.forEach(o => {
+if(o.status === "Pendente"){
+pendentes++;
+}
 
-    lista.innerHTML += `
+if(o.status === "Concluído"){
+concluidas++;
+}
 
-      <tr>
+lista.innerHTML += `
 
-        <td>${o.cliente}</td>
+<tr>
 
-        <td>${o.servico}</td>
+<td>${o.cliente}</td>
 
-        <td>R$ ${o.valor}</td>
+<td>${o.descricao}</td>
 
-        <td>${o.status}</td>
+<td>R$ ${o.valor}</td>
 
-      </tr>
+<td>${o.status}</td>
 
-    `;
+<td>
 
-  });
+<div class="actions">
+
+<button
+class="btn btn-success"
+onclick="concluirOS('${o._id}')"
+>
+Concluir
+</button>
+
+<button
+class="btn btn-danger"
+onclick="deletarOS('${o._id}')"
+>
+Excluir
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+document.getElementById(
+"faturamento"
+).innerText =
+"R$ " + total.toFixed(2);
+
+document.getElementById(
+"pendentes"
+).innerText =
+pendentes;
+
+document.getElementById(
+"financeiroTotal"
+).innerText =
+"R$ " + total.toFixed(2);
+
+document.getElementById(
+"financeiroConcluidas"
+).innerText =
+concluidas;
+
+document.getElementById(
+"financeiroPendentes"
+).innerText =
+pendentes;
+
+}
+
+async function concluirOS(id){
+
+await fetchAuth(
+
+API_ORDENS + "/" + id,
+
+{
+
+method:"PUT",
+
+body:JSON.stringify({
+
+status:"Concluído"
+
+})
+
+}
+
+);
+
+carregarOrdens();
+
+}
+
+async function deletarOS(id){
+
+await fetchAuth(
+
+API_ORDENS + "/" + id,
+
+{
+
+method:"DELETE"
+
+}
+
+);
+
+carregarOrdens();
 
 }
 

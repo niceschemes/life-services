@@ -116,4 +116,12 @@ app.listen(PORT, () => {
     '🚀 Servidor rodando na porta ' + PORT
   );
 
+  const financeiroRoutes =
+require("./routes/financeiro");
+
+app.use(
+  "/financeiro",
+  financeiroRoutes
+);
+
 });

@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.JWT_SECRET || 'segredo123';
 
 module.exports = function (req, res, next) {
   const header = req.headers.authorization;
@@ -10,7 +11,7 @@ module.exports = function (req, res, next) {
   const token = header.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, "segredo123");
+    const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;
     next();
   } catch {

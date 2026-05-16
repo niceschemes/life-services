@@ -2,126 +2,58 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const Cliente = require('./models/clientes');
+const Servico = require('./models/servico');
+const Ordem = require('./models/ordens');
 
 const app = express();
 
-/* =========================
-   MIDDLEWARES
-========================= */
-
 app.use(cors());
-
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'frontend')));
 
-/* =========================
-   FRONTEND
-========================= */
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/life_services';
 
-app.use(
-  express.static(
-    path.join(__dirname, 'frontend')
-  )
-);
-
-/* =========================
-   BANCO DE DADOS
-========================= */
-
-mongoose.connect(process.env.MONGO_URL)
-
+mongoose.connect(MONGO_URL)
   .then(() => {
-
-    console.log('✅ Mongo conectado');
-
+    console.log('Mongo conectado');
   })
-
   .catch((err) => {
-
-    console.log('❌ Erro no Mongo:', err);
-
+    console.error('Erro no Mongo:', err.message);
   });
 
-/* =========================
-   ROTAS API
-========================= */
+app.use('/clientes', require('./routes/clientes'));
+app.use('/auth', require('./routes/auth'));
+app.use('/servicos', require('./routes/servicos'));
+app.use('/ordens', require('./routes/ordens'));
+app.use('/financeiro', require('./routes/financeiro'));
 
-/* CLIENTES */
+app.get('/dashboard', async (req, res) => {
+  try {
+    const clientes = await Cliente.countDocuments();
+    const servicos = await Servico.countDocuments();
+    const ordens = await Ordem.countDocuments();
+    const abertas = await Ordem.countDocuments({
+      status: { $in: ['Pendente', 'Em andamento'] }
+    });
 
-const clientesRoutes =
-require('./routes/clientes');
-
-app.use(
-  '/clientes',
-  clientesRoutes
-);
-
-/* LOGIN */
-
-const authRoutes =
-require('./routes/auth');
-
-app.use(
-  '/auth',
-  authRoutes
-);
-
-/* SERVIÇOS */
-
-const servicosRoutes =
-require('./routes/servicos');
-
-app.use(
-  '/servicos',
-  servicosRoutes
-);
-
-/* ORDENS DE SERVIÇO */
-
-const ordensRoutes =
-require('./routes/ordens');
-
-app.use(
-  '/ordens',
-  ordensRoutes
-);
-
-/* =========================
-   ROTA FRONTEND
-========================= */
-
-app.get('/', (req, res) => {
-
-  res.sendFile(
-
-    path.join(
-      __dirname,
-      'frontend',
-      'index.html'
-    )
-
-  );
-
+    res.json({
+      clientes,
+      servicos,
+      ordens,
+      abertas
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-/* =========================
-   PORTA
-========================= */
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+});
 
-const PORT =
-process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-
-  console.log(
-    '🚀 Servidor rodando na porta ' + PORT
-  );
-
-  const financeiroRoutes =
-require("./routes/financeiro");
-
-app.use(
-  "/financeiro",
-  financeiroRoutes
-);
-
+  console.log('Servidor rodando na porta ' + PORT);
 });

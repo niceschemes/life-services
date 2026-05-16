@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard ERP</title>
+</head>
+<body>
+
+  <h1>Dashboard</h1>
+
+  <div id="dados"></div>
+
+  <script>
+    fetch('/dashboard')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('dados').innerHTML = `
+          <p>Clientes: ${data.clientes}</p>
+          <p>Serviços: ${data.servicos}</p>
+          <p>Ordens: ${data.ordens}</p>
+          <p>Abertas: ${data.abertas}</p>
+        `;
+      });
+  </script>
+
+</body>
+</html>

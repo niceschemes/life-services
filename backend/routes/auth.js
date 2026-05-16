@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const JWT_SECRET = process.env.JWT_SECRET || 'segredo123';
 
 // 🔐 REGISTRO
 router.post('/register', async (req, res) => {
@@ -46,7 +47,7 @@ router.post('/login', async (req, res) => {
 
 const token = jwt.sign(
   { id: user._id, usuario: user.usuario },
-  "segredo123",
+  JWT_SECRET,
   { expiresIn: "1d" }
 );
 

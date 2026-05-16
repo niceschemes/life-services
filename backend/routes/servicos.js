@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const servico = require('../models/servico');
+const Servico = require('../models/servico');
 
 /* =========================
    LISTAR
@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
 
   try {
 
-    const servicos = await servico.find()
+    const servicos = await Servico.find()
       .sort({ data:-1 });
 
     res.json(servicos);
@@ -35,10 +35,10 @@ router.post('/', async (req, res) => {
 
   try {
 
-    const novoservico =
-      await servico.create(req.body);
+    const novoServico =
+      await Servico.create(req.body);
 
-    res.status(201).json(novoservico);
+    res.status(201).json(novoServico);
 
   } catch(err) {
 
@@ -58,8 +58,8 @@ router.put('/:id', async (req, res) => {
 
   try {
 
-    const servico =
-      await servico.findByIdAndUpdate(
+    const servicoAtualizado =
+      await Servico.findByIdAndUpdate(
 
         req.params.id,
 
@@ -69,7 +69,7 @@ router.put('/:id', async (req, res) => {
 
       );
 
-    res.json(servico);
+    res.json(servicoAtualizado);
 
   } catch(err) {
 
@@ -89,7 +89,7 @@ router.delete('/:id', async (req, res) => {
 
   try {
 
-    await servico.findByIdAndDelete(
+    await Servico.findByIdAndDelete(
       req.params.id
     );
 

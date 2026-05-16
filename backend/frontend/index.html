@@ -179,6 +179,30 @@ button{
   flex-wrap:wrap;
 }
 
+.badge-status{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:bold;
+  display:inline-block;
+}
+
+.status-pendente{
+  background:#7f1d1d;
+  color:#fecaca;
+}
+
+.status-andamento{
+  background:#78350f;
+  color:#fde68a;
+}
+
+.status-concluido{
+  background:#14532d;
+  color:#bbf7d0;
+}
+
+
 .login-screen{
   min-height:100vh;
   display:flex;
@@ -509,6 +533,15 @@ Criar Ordem
 
 <h2>Ordens</h2>
 
+<br>
+
+<input
+id="buscaOrdens"
+placeholder="Buscar ordens..."
+oninput="carregarOrdens()"
+>
+
+
 <table class="table">
 
 <thead>
@@ -722,7 +755,7 @@ document.getElementById("loginBox")
 document.getElementById("app")
 .style.display = "block";
 
-ccarregarClientes();
+carregarClientes();
 
 carregarOrdens();
 
@@ -953,8 +986,28 @@ async function carregarOrdens(){
 const res =
 await fetchAuth(API_ORDENS);
 
-const ordens =
+let ordens =
 await res.json();
+
+const busca =
+document.getElementById("buscaOrdens")
+?.value
+.toLowerCase()
+.trim();
+
+if(busca){
+
+ordens = ordens.filter(o=>{
+
+return (
+String(o.cliente || "").toLowerCase().includes(busca) ||
+String(o.descricao || "").toLowerCase().includes(busca) ||
+String(o.status || "").toLowerCase().includes(busca)
+);
+
+});
+
+}
 
 document.getElementById(
 "totalOrdens"
@@ -983,17 +1036,46 @@ if(o.status === "Concluído"){
 concluidas++;
 }
 
+let corStatus = "#f59e0b";
+
+if(o.status === "Concluído"){
+corStatus = "#16a34a";
+}
+
+if(o.status === "Em andamento"){
+corStatus = "#2563eb";
+}
+
 lista.innerHTML += `
 
 <tr>
 
-<td>${o.cliente}</td>
+<td>
+<b>${o.cliente}</b>
+</td>
 
-<td>${o.descricao}</td>
+<td>
+${o.descricao}
+</td>
 
-<td>R$ ${o.valor}</td>
+<td>
+R$ ${Number(o.valor).toFixed(2)}
+</td>
 
-<td>${o.status}</td>
+<td>
+
+<span style="
+background:${corStatus};
+padding:6px 10px;
+border-radius:999px;
+font-size:12px;
+font-weight:bold;
+display:inline-block;
+">
+${o.status}
+</span>
+
+</td>
 
 <td>
 
@@ -1004,6 +1086,16 @@ class="btn btn-success"
 onclick="concluirOS('${o._id}')"
 >
 Concluir
+</button>
+
+<button
+class="btn btn-warning"
+onclick="editarStatus(
+'${o._id}',
+'${o.status}'
+)"
+>
+Editar
 </button>
 
 <button
@@ -1022,7 +1114,6 @@ Excluir
 `;
 
 });
-
 document.getElementById(
 "faturamento"
 ).innerText =
@@ -1030,21 +1121,6 @@ document.getElementById(
 
 document.getElementById(
 "pendentes"
-).innerText =
-pendentes;
-
-document.getElementById(
-"financeiroTotal"
-).innerText =
-"R$ " + total.toFixed(2);
-
-document.getElementById(
-"financeiroConcluidas"
-).innerText =
-concluidas;
-
-document.getElementById(
-"financeiroPendentes"
 ).innerText =
 pendentes;
 
@@ -1063,6 +1139,40 @@ method:"PUT",
 body:JSON.stringify({
 
 status:"Concluído"
+
+})
+
+}
+
+);
+
+carregarOrdens();
+
+}
+
+async function editarStatus(id,statusAtual){
+
+const proximoStatus =
+prompt(
+"Novo status: Pendente, Em andamento ou ConcluÃ­do",
+statusAtual
+);
+
+if(!proximoStatus){
+return;
+}
+
+await fetchAuth(
+
+API_ORDENS + "/" + id,
+
+{
+
+method:"PUT",
+
+body:JSON.stringify({
+
+status:proximoStatus
 
 })
 

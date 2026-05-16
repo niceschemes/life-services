@@ -22,6 +22,16 @@
   --warning:#f59e0b;
 }
 
+body.light{
+  --bg:#f8fafc;
+  --sidebar:#ffffff;
+  --card:#ffffff;
+  --border:#cbd5e1;
+  --text:#0f172a;
+  --muted:#475569;
+  --primary:#2563eb;
+}
+
 *{
   margin:0;
   padding:0;
@@ -116,6 +126,78 @@ body{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
   gap:12px;
+}
+
+.toolbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin:15px 0;
+}
+
+.detail-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:12px;
+  margin-top:12px;
+}
+
+.mini-list{
+  margin-top:8px;
+  display:grid;
+  gap:6px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.mini-list div{
+  padding:8px;
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+
+.photo-row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+
+.photo-row img{
+  width:72px;
+  height:72px;
+  object-fit:cover;
+  border-radius:8px;
+  border:1px solid var(--border);
+}
+
+.signature-pad{
+  width:100%;
+  height:130px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:8px;
+  touch-action:none;
+}
+
+.priority{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:bold;
+  display:inline-block;
+}
+
+.priority-urgente{background:#7f1d1d;color:#fecaca;}
+.priority-media{background:#78350f;color:#fde68a;}
+.priority-baixa{background:#14532d;color:#bbf7d0;}
+
+.print-area{
+  background:white;
+  color:#111827;
+  padding:24px;
+  border-radius:8px;
 }
 
 input,
@@ -339,6 +421,27 @@ Financeiro
 </button>
 
 <button
+class="menu-btn"
+onclick="abrirSecao('agenda',this)"
+>
+Agenda
+</button>
+
+<button
+class="menu-btn"
+onclick="abrirSecao('relatorios',this)"
+>
+Relatorios
+</button>
+
+<button
+class="btn btn-warning"
+onclick="alternarTema()"
+>
+Tema
+</button>
+
+<button
 class="btn btn-danger"
 onclick="logout()"
 >
@@ -409,6 +512,37 @@ id="pendentes"
 </div>
 </div>
 
+<div class="card">
+<div class="stat-title">
+Ticket medio
+</div>
+
+<div
+class="stat-number"
+id="ticketMedio"
+>
+R$ 0
+</div>
+</div>
+
+<div class="card">
+<div class="stat-title">
+OS atrasadas
+</div>
+
+<div
+class="stat-number"
+id="ordensAtrasadas"
+>
+0
+</div>
+</div>
+
+</div>
+
+<div class="card">
+<h2>Notificacoes</h2>
+<div id="notificacoes" class="mini-list"></div>
 </div>
 
 </section>
@@ -508,6 +642,27 @@ placeholder="Valor"
 
 </select>
 
+<select id="osPrioridade">
+<option value="Urgente">Urgente</option>
+<option value="Media" selected>Media</option>
+<option value="Baixa">Baixa</option>
+</select>
+
+<input
+id="osTecnico"
+placeholder="Tecnico responsavel"
+>
+
+<input
+id="osTelefone"
+placeholder="WhatsApp do cliente"
+>
+
+<input
+id="osDataAgendada"
+type="datetime-local"
+>
+
 </div>
 
 <br>
@@ -517,6 +672,72 @@ id="osDescricao"
 placeholder="Descrição"
 rows="4"
 ></textarea>
+
+<br><br>
+
+<div class="form-grid">
+
+<textarea
+id="osChecklist"
+placeholder="[x] instalacao eletrica&#10;[x] limpeza&#10;[x] testes&#10;[ ] assinatura cliente"
+rows="5"
+></textarea>
+
+<textarea
+id="osHistorico"
+placeholder="12/05 - orcamento enviado&#10;13/05 - cliente aprovou&#10;15/05 - servico concluido&#10;16/05 - pagamento recebido"
+rows="5"
+></textarea>
+
+</div>
+
+<br>
+
+<div class="form-grid">
+
+<label>
+Fotos antes
+<input
+id="osFotosAntes"
+type="file"
+accept="image/*"
+multiple
+>
+</label>
+
+<label>
+Fotos depois
+<input
+id="osFotosDepois"
+type="file"
+accept="image/*"
+multiple
+>
+</label>
+
+<select id="assinaturaTipo">
+<option value="orcamento">Assinatura do orcamento</option>
+<option value="os">Assinatura da OS</option>
+<option value="entrega">Assinatura da entrega</option>
+</select>
+
+</div>
+
+<br>
+
+<canvas
+id="assinaturaCanvas"
+class="signature-pad"
+></canvas>
+
+<div class="toolbar">
+<button
+class="btn btn-warning"
+onclick="limparAssinatura()"
+>
+Limpar assinatura
+</button>
+</div>
 
 <br><br>
 
@@ -687,6 +908,45 @@ Salvar Lançamento
 
 </section>
 
+<!-- AGENDA -->
+
+<section id="agenda" class="section">
+
+<div class="card">
+<h2>Agenda</h2>
+<div id="listaAgenda" class="mini-list"></div>
+</div>
+
+</section>
+
+<!-- RELATORIOS -->
+
+<section id="relatorios" class="section">
+
+<div class="card">
+<h2>Relatorios</h2>
+
+<div class="toolbar">
+<button
+class="btn btn-primary"
+onclick="exportarOrdensCSV()"
+>
+Exportar Excel
+</button>
+
+<button
+class="btn btn-success"
+onclick="imprimirRelatorio()"
+>
+Gerar PDF
+</button>
+</div>
+
+<div id="resumoRelatorio" class="mini-list"></div>
+</div>
+
+</section>
+
 </main>
 
 </div>
@@ -713,6 +973,9 @@ BASE + "/auth/login";
 let TOKEN =
 localStorage.getItem("token");
 
+let cacheOrdens = [];
+let assinaturaDesenhada = false;
+
 /* MENU */
 
 function abrirSecao(secao,btn){
@@ -730,6 +993,25 @@ document
 .forEach(b=>b.classList.remove("active"));
 
 btn.classList.add("active");
+
+}
+
+function alternarTema(){
+
+document.body.classList.toggle("light");
+
+localStorage.setItem(
+"tema",
+document.body.classList.contains("light") ? "light" : "dark"
+);
+
+}
+
+function aplicarTema(){
+
+if(localStorage.getItem("tema") === "light"){
+document.body.classList.add("light");
+}
 
 }
 
@@ -940,6 +1222,225 @@ carregarClientes();
 
 /* ORDENS */
 
+function moeda(valor){
+
+return "R$ " + Number(valor || 0).toFixed(2);
+
+}
+
+function textoSeguro(valor){
+
+return String(valor || "")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+function dataHora(valor){
+
+if(!valor){
+return "Sem agenda";
+}
+
+return new Date(valor).toLocaleString("pt-BR",{
+day:"2-digit",
+month:"2-digit",
+hour:"2-digit",
+minute:"2-digit"
+});
+
+}
+
+function prioridadeClasse(prioridade){
+
+return "priority-" + String(prioridade || "Media").toLowerCase();
+
+}
+
+function parseChecklist(texto){
+
+return String(texto || "")
+.split("\n")
+.map(linha=>linha.trim())
+.filter(Boolean)
+.map(linha=>{
+
+const aberto =
+linha.startsWith("[ ]");
+
+return {
+texto: linha.replace(/^\[[ xX]\]\s*/,""),
+concluido: !aberto
+};
+
+});
+
+}
+
+function parseHistorico(texto){
+
+return String(texto || "")
+.split("\n")
+.map(linha=>linha.trim())
+.filter(Boolean)
+.map(linha=>{
+
+const partes =
+linha.split(" - ");
+
+const dataTexto =
+partes.length > 1 ? partes.shift() : "";
+
+const descricao =
+partes.join(" - ") || linha;
+
+const match =
+dataTexto.match(/^(\d{1,2})\/(\d{1,2})$/);
+
+let data =
+new Date();
+
+if(match){
+data = new Date(
+new Date().getFullYear(),
+Number(match[2]) - 1,
+Number(match[1])
+);
+}
+
+return {
+data,
+descricao
+};
+
+});
+
+}
+
+function lerArquivoComoDataURL(file){
+
+return new Promise((resolve,reject)=>{
+
+const reader =
+new FileReader();
+
+reader.onload =
+()=>resolve(reader.result);
+
+reader.onerror =
+()=>reject(reader.error);
+
+reader.readAsDataURL(file);
+
+});
+
+}
+
+async function lerFotos(inputId,tipo){
+
+const input =
+document.getElementById(inputId);
+
+const arquivos =
+Array.from(input.files || []);
+
+const fotos =
+await Promise.all(
+arquivos.map(async file=>({
+tipo,
+nome:file.name,
+url:await lerArquivoComoDataURL(file)
+}))
+);
+
+return fotos;
+
+}
+
+function iniciarAssinatura(){
+
+const canvas =
+document.getElementById("assinaturaCanvas");
+
+if(!canvas){
+return;
+}
+
+const ctx =
+canvas.getContext("2d");
+
+function ajustar(){
+const rect = canvas.getBoundingClientRect();
+canvas.width = rect.width;
+canvas.height = rect.height;
+ctx.lineWidth = 2;
+ctx.lineCap = "round";
+ctx.strokeStyle = "#111827";
+}
+
+ajustar();
+
+let desenhando = false;
+
+function ponto(e){
+const rect = canvas.getBoundingClientRect();
+const touch = e.touches ? e.touches[0] : e;
+return {
+x: touch.clientX - rect.left,
+y: touch.clientY - rect.top
+};
+}
+
+function iniciar(e){
+desenhando = true;
+assinaturaDesenhada = true;
+const p = ponto(e);
+ctx.beginPath();
+ctx.moveTo(p.x,p.y);
+}
+
+function mover(e){
+if(!desenhando){
+return;
+}
+e.preventDefault();
+const p = ponto(e);
+ctx.lineTo(p.x,p.y);
+ctx.stroke();
+}
+
+function parar(){
+desenhando = false;
+}
+
+canvas.addEventListener("mousedown",iniciar);
+canvas.addEventListener("mousemove",mover);
+canvas.addEventListener("mouseup",parar);
+canvas.addEventListener("mouseleave",parar);
+canvas.addEventListener("touchstart",iniciar);
+canvas.addEventListener("touchmove",mover);
+canvas.addEventListener("touchend",parar);
+
+window.addEventListener("resize",ajustar);
+
+}
+
+function limparAssinatura(){
+
+const canvas =
+document.getElementById("assinaturaCanvas");
+
+const ctx =
+canvas.getContext("2d");
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+assinaturaDesenhada = false;
+
+}
+
 async function criarOS(){
 
 const cliente =
@@ -954,9 +1455,55 @@ const status =
 document.getElementById("osStatus")
 .value;
 
+const prioridade =
+document.getElementById("osPrioridade")
+.value;
+
+const tecnico =
+document.getElementById("osTecnico")
+.value;
+
+const telefone =
+document.getElementById("osTelefone")
+.value;
+
+const dataAgendada =
+document.getElementById("osDataAgendada")
+.value;
+
 const descricao =
 document.getElementById("osDescricao")
 .value;
+
+const checklist =
+parseChecklist(
+document.getElementById("osChecklist").value
+);
+
+const historico =
+parseHistorico(
+document.getElementById("osHistorico").value
+);
+
+const fotos =
+[
+...(await lerFotos("osFotosAntes","Antes")),
+...(await lerFotos("osFotosDepois","Depois"))
+];
+
+const assinaturas = {};
+
+if(assinaturaDesenhada){
+
+const tipoAssinatura =
+document.getElementById("assinaturaTipo").value;
+
+assinaturas[tipoAssinatura] =
+document
+.getElementById("assinaturaCanvas")
+.toDataURL("image/png");
+
+}
 
 await fetchAuth(API_ORDENS,{
 
@@ -967,7 +1514,15 @@ body:JSON.stringify({
 cliente,
 descricao,
 valor,
-status
+status,
+prioridade,
+tecnico,
+telefone,
+dataAgendada,
+checklist,
+historico,
+fotos,
+assinaturas
 
 })
 
@@ -976,6 +1531,14 @@ status
 document.getElementById("osCliente").value="";
 document.getElementById("osValor").value="";
 document.getElementById("osDescricao").value="";
+document.getElementById("osTecnico").value="";
+document.getElementById("osTelefone").value="";
+document.getElementById("osDataAgendada").value="";
+document.getElementById("osChecklist").value="";
+document.getElementById("osHistorico").value="";
+document.getElementById("osFotosAntes").value="";
+document.getElementById("osFotosDepois").value="";
+limparAssinatura();
 
 carregarOrdens();
 
@@ -988,6 +1551,8 @@ await fetchAuth(API_ORDENS);
 
 let ordens =
 await res.json();
+
+cacheOrdens = ordens;
 
 const busca =
 document.getElementById("buscaOrdens")
@@ -1002,7 +1567,8 @@ ordens = ordens.filter(o=>{
 return (
 String(o.cliente || "").toLowerCase().includes(busca) ||
 String(o.descricao || "").toLowerCase().includes(busca) ||
-String(o.status || "").toLowerCase().includes(busca)
+String(o.status || "").toLowerCase().includes(busca) ||
+String(o.tecnico || "").toLowerCase().includes(busca)
 );
 
 });
@@ -1023,12 +1589,19 @@ lista.innerHTML = "";
 let total = 0;
 let pendentes = 0;
 let concluidas = 0;
+let atrasadas = 0;
+
+const hoje =
+new Date();
 
 ordens.forEach(o=>{
 
 total += Number(o.valor);
 
-if(o.status === "Pendente"){
+const concluida =
+String(o.status || "").toLowerCase().includes("conclu");
+
+if(!concluida){
 pendentes++;
 }
 
@@ -1038,6 +1611,10 @@ concluidas++;
 
 let corStatus = "#f59e0b";
 
+if(o.dataAgendada && !concluida && new Date(o.dataAgendada) < hoje){
+atrasadas++;
+}
+
 if(o.status === "Concluído"){
 corStatus = "#16a34a";
 }
@@ -1046,20 +1623,86 @@ if(o.status === "Em andamento"){
 corStatus = "#2563eb";
 }
 
+const checklistHtml =
+(o.checklist || [])
+.map((item,index)=>`
+<label>
+<input
+type="checkbox"
+${item.concluido ? "checked" : ""}
+onchange="alternarChecklist('${o._id}',${index},this.checked)"
+>
+${textoSeguro(item.texto)}
+</label>
+`)
+.join("");
+
+const historicoHtml =
+(o.historico || [])
+.map(item=>`
+<div>
+${new Date(item.data).toLocaleDateString("pt-BR")} - ${textoSeguro(item.descricao)}
+</div>
+`)
+.join("");
+
+const fotosHtml =
+(o.fotos || [])
+.slice(0,6)
+.map(foto=>`
+<img
+src="${foto.url}"
+title="${textoSeguro(foto.tipo)} - ${textoSeguro(foto.nome)}"
+>
+`)
+.join("");
+
+const assinaturaHtml =
+o.assinaturas && Object.values(o.assinaturas).some(Boolean)
+? "<div>Assinatura registrada</div>"
+: "<div>Sem assinatura</div>";
+
 lista.innerHTML += `
 
 <tr>
 
 <td>
 <b>${o.cliente}</b>
+<br>
+<span class="priority ${prioridadeClasse(o.prioridade)}">
+${textoSeguro(o.prioridade || "Media")}
+</span>
+<div class="mini-list">
+<div>Tecnico: ${textoSeguro(o.tecnico || "Nao definido")}</div>
+<div>Agenda: ${dataHora(o.dataAgendada)}</div>
+<div>Pagamento: ${textoSeguro(o.pagamentoStatus || "Pendente")}</div>
+</div>
 </td>
 
 <td>
-${o.descricao}
+${textoSeguro(o.descricao)}
+<div class="detail-grid">
+<div>
+<b>Checklist</b>
+<div class="mini-list">${checklistHtml || "<div>Nenhum item</div>"}</div>
+</div>
+<div>
+<b>Historico</b>
+<div class="mini-list">${historicoHtml || "<div>Nenhum evento</div>"}</div>
+</div>
+<div>
+<b>Fotos</b>
+<div class="photo-row">${fotosHtml || "<span>Sem fotos</span>"}</div>
+</div>
+<div>
+<b>Assinatura</b>
+<div class="mini-list">${assinaturaHtml}</div>
+</div>
+</div>
 </td>
 
 <td>
-R$ ${Number(o.valor).toFixed(2)}
+${moeda(o.valor)}
 </td>
 
 <td>
@@ -1086,6 +1729,34 @@ class="btn btn-success"
 onclick="concluirOS('${o._id}')"
 >
 Concluir
+</button>
+
+<button
+class="btn btn-primary"
+onclick="enviarWhatsApp('${o._id}','orcamento')"
+>
+Orcamento
+</button>
+
+<button
+class="btn btn-primary"
+onclick="enviarWhatsApp('${o._id}','cobranca')"
+>
+Cobranca
+</button>
+
+<button
+class="btn btn-primary"
+onclick="enviarWhatsApp('${o._id}','visita')"
+>
+Visita
+</button>
+
+<button
+class="btn btn-success"
+onclick="receberPagamento('${o._id}')"
+>
+Pago
 </button>
 
 <button
@@ -1123,6 +1794,20 @@ document.getElementById(
 "pendentes"
 ).innerText =
 pendentes;
+
+document.getElementById(
+"ticketMedio"
+).innerText =
+moeda(ordens.length ? total / ordens.length : 0);
+
+document.getElementById(
+"ordensAtrasadas"
+).innerText =
+atrasadas;
+
+renderizarNotificacoes(ordens);
+renderizarAgenda(cacheOrdens);
+renderizarRelatorio(cacheOrdens);
 
 }
 
@@ -1181,6 +1866,232 @@ status:proximoStatus
 );
 
 carregarOrdens();
+
+}
+
+async function alternarChecklist(id,index,concluido){
+
+const ordem =
+cacheOrdens.find(o=>o._id === id);
+
+if(!ordem){
+return;
+}
+
+const checklist =
+[...(ordem.checklist || [])];
+
+checklist[index].concluido = concluido;
+
+await fetchAuth(
+API_ORDENS + "/" + id,
+{
+method:"PUT",
+body:JSON.stringify({ checklist })
+}
+);
+
+carregarOrdens();
+
+}
+
+async function receberPagamento(id){
+
+await fetchAuth(
+API_ORDENS + "/" + id,
+{
+method:"PUT",
+body:JSON.stringify({ pagamentoStatus:"Recebido" })
+}
+);
+
+carregarOrdens();
+
+}
+
+function enviarWhatsApp(id,tipo){
+
+const ordem =
+cacheOrdens.find(o=>o._id === id);
+
+if(!ordem){
+return;
+}
+
+let telefone =
+String(ordem.telefone || "").replace(/\D/g,"");
+
+if(!telefone){
+telefone = prompt("WhatsApp do cliente:");
+telefone = String(telefone || "").replace(/\D/g,"");
+}
+
+if(!telefone){
+return;
+}
+
+if(!telefone.startsWith("55")){
+telefone = "55" + telefone;
+}
+
+const mensagens = {
+orcamento:`Ola ${ordem.cliente}, seu orcamento de ${moeda(ordem.valor)} esta pronto para aprovacao.`,
+cobranca:`Ola ${ordem.cliente}, identificamos pagamento pendente da OS no valor de ${moeda(ordem.valor)}.`,
+visita:`Ola ${ordem.cliente}, sua visita tecnica esta agendada para ${dataHora(ordem.dataAgendada)}.`
+};
+
+window.open(
+"https://wa.me/" + telefone + "?text=" + encodeURIComponent(mensagens[tipo]),
+"_blank"
+);
+
+}
+
+function renderizarAgenda(ordens){
+
+const lista =
+document.getElementById("listaAgenda");
+
+if(!lista){
+return;
+}
+
+const agendadas =
+ordens
+.filter(o=>o.dataAgendada)
+.sort((a,b)=>new Date(a.dataAgendada) - new Date(b.dataAgendada));
+
+if(!agendadas.length){
+lista.innerHTML = "<div>Nenhuma ordem agendada</div>";
+return;
+}
+
+const grupos = {};
+
+agendadas.forEach(o=>{
+const dia = new Date(o.dataAgendada).toLocaleDateString("pt-BR",{
+weekday:"long",
+day:"2-digit",
+month:"2-digit"
+});
+grupos[dia] = grupos[dia] || [];
+grupos[dia].push(o);
+});
+
+lista.innerHTML =
+Object.keys(grupos).map(dia=>`
+<div>
+<b>${dia}</b>
+${grupos[dia].map(o=>`
+<div>
+${new Date(o.dataAgendada).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}
+ - ${textoSeguro(o.cliente)}
+ - ${textoSeguro(o.tecnico || "sem tecnico")}
+</div>
+`).join("")}
+</div>
+`).join("");
+
+}
+
+function renderizarNotificacoes(ordens){
+
+const lista =
+document.getElementById("notificacoes");
+
+if(!lista){
+return;
+}
+
+const hoje =
+new Date();
+
+const avisos = [];
+
+ordens.forEach(o=>{
+const concluida =
+String(o.status || "").toLowerCase().includes("conclu");
+
+if(o.dataAgendada && !concluida && new Date(o.dataAgendada) < hoje){
+avisos.push(`OS atrasada: ${o.cliente}`);
+}
+
+if(o.pagamentoStatus !== "Recebido" && Number(o.valor || 0) > 0){
+avisos.push(`Pagamento pendente: ${o.cliente} - ${moeda(o.valor)}`);
+}
+});
+
+lista.innerHTML =
+avisos.length
+? avisos.slice(0,8).map(a=>`<div>${textoSeguro(a)}</div>`).join("")
+: "<div>Nenhuma notificacao importante</div>";
+
+}
+
+function renderizarRelatorio(ordens){
+
+const box =
+document.getElementById("resumoRelatorio");
+
+if(!box){
+return;
+}
+
+const total =
+ordens.reduce((s,o)=>s + Number(o.valor || 0),0);
+
+const concluidas =
+ordens.filter(o=>String(o.status || "").toLowerCase().includes("conclu")).length;
+
+box.innerHTML = `
+<div>Total em ordens: ${moeda(total)}</div>
+<div>Ordens concluidas: ${concluidas}</div>
+<div>Ticket medio: ${moeda(ordens.length ? total / ordens.length : 0)}</div>
+<div>Clientes ativos: ${new Set(ordens.map(o=>o.cliente)).size}</div>
+`;
+
+}
+
+function exportarOrdensCSV(){
+
+const linhas = [
+["Cliente","Tecnico","Status","Prioridade","Valor","Agenda","Pagamento"]
+];
+
+cacheOrdens.forEach(o=>{
+linhas.push([
+o.cliente,
+o.tecnico || "",
+o.status,
+o.prioridade || "Media",
+o.valor,
+o.dataAgendada ? new Date(o.dataAgendada).toLocaleString("pt-BR") : "",
+o.pagamentoStatus || "Pendente"
+]);
+});
+
+const csv =
+linhas.map(linha=>linha.map(campo=>`"${String(campo || "").replace(/"/g,'""')}"`).join(";")).join("\n");
+
+const blob =
+new Blob([csv],{ type:"text/csv;charset=utf-8" });
+
+const url =
+URL.createObjectURL(blob);
+
+const link =
+document.createElement("a");
+
+link.href = url;
+link.download = "ordens-life-services.csv";
+link.click();
+URL.revokeObjectURL(url);
+
+}
+
+function imprimirRelatorio(){
+
+window.print();
 
 }
 
@@ -1353,6 +2264,8 @@ carregarFinanceiro();
 
 /* START */
 
+aplicarTema();
+iniciarAssinatura();
 checarLogin();
 
 </script>

@@ -79,6 +79,15 @@ router.post('/', auth, async (req, res) => {
       descricao,
       valor,
       status,
+      prioridade,
+      tecnico,
+      telefone,
+      dataAgendada,
+      pagamentoStatus,
+      checklist,
+      historico,
+      fotos,
+      assinaturas,
       observacoes
     } = req.body;
 
@@ -103,6 +112,24 @@ router.post('/', auth, async (req, res) => {
       valor,
 
       status: status || 'Pendente',
+
+      prioridade: prioridade || 'Media',
+
+      tecnico: tecnico || '',
+
+      telefone: telefone || '',
+
+      dataAgendada: dataAgendada || undefined,
+
+      pagamentoStatus: pagamentoStatus || 'Pendente',
+
+      checklist: checklist || [],
+
+      historico: historico || [],
+
+      fotos: fotos || [],
+
+      assinaturas: assinaturas || {},
 
       observacoes: observacoes || ''
 

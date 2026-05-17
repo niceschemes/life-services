@@ -435,6 +435,13 @@ Relatorios
 </button>
 
 <button
+class="menu-btn"
+onclick="abrirSecao('projeto',this)"
+>
+Projeto
+</button>
+
+<button
 class="btn btn-warning"
 onclick="alternarTema()"
 >
@@ -655,7 +662,7 @@ placeholder="Tecnico responsavel"
 
 <input
 id="osTelefone"
-placeholder="WhatsApp do cliente"
+placeholder="Telefone do cliente"
 >
 
 <input
@@ -679,13 +686,13 @@ rows="4"
 
 <textarea
 id="osChecklist"
-placeholder="[x] instalacao eletrica&#10;[x] limpeza&#10;[x] testes&#10;[ ] assinatura cliente"
+placeholder="Itens do checklist, um por linha&#10;instalacao eletrica&#10;limpeza&#10;testes&#10;assinatura cliente"
 rows="5"
 ></textarea>
 
 <textarea
 id="osHistorico"
-placeholder="12/05 - orcamento enviado&#10;13/05 - cliente aprovou&#10;15/05 - servico concluido&#10;16/05 - pagamento recebido"
+placeholder="Historico do atendimento&#10;12/05 - orcamento enviado&#10;13/05 - cliente aprovou&#10;15/05 - servico concluido&#10;16/05 - pagamento recebido"
 rows="5"
 ></textarea>
 
@@ -947,6 +954,65 @@ Gerar PDF
 
 </section>
 
+<!-- PROJETO -->
+
+<section id="projeto" class="section">
+
+<div class="card">
+<h2>Projeto Integrado</h2>
+
+<div class="detail-grid">
+<div>
+<h3>Aplicacao</h3>
+<div class="mini-list">
+<div>Sistema web para gestao de clientes, ordens de servico, agenda, financeiro e relatorios.</div>
+<div>Projeto implantado em ambiente de nuvem com backend Node.js, Express e MongoDB.</div>
+</div>
+</div>
+
+<div>
+<h3>Beneficiados</h3>
+<div class="mini-list">
+<div>Pequenas empresas e prestadores de servico que precisam organizar atendimentos, comprovantes e controle financeiro.</div>
+<div>Usuarios administrativos que necessitam consultar dados em tempo real pela web.</div>
+</div>
+</div>
+
+<div>
+<h3>Computacao em Nuvem</h3>
+<div class="mini-list">
+<div>Deploy da aplicacao em plataforma PaaS.</div>
+<div>Uso de variaveis de ambiente para banco de dados e autenticacao.</div>
+<div>Banco MongoDB preparado para execucao externa em nuvem.</div>
+<div>Logs e status da aplicacao acompanhados pelo painel da plataforma.</div>
+</div>
+</div>
+
+<div>
+<h3>Qualidade de Software</h3>
+<div class="mini-list">
+<div>Separacao entre rotas, modelos, middleware de autenticacao e interface.</div>
+<div>Validacoes de campos obrigatorios nas rotas principais.</div>
+<div>Testes manuais de login, cadastro, listagem, edicao e exclusao.</div>
+<div>Checagem de sintaxe com Node.js antes da entrega.</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Roteiro para o video</h2>
+<div class="mini-list">
+<div>1. Apresentar o desafio: organizar atendimentos e ordens de servico em uma aplicacao web.</div>
+<div>2. Mostrar login, dashboard, clientes, ordens, agenda, financeiro e relatorios.</div>
+<div>3. Demonstrar o ambiente em nuvem, variaveis de ambiente e conexao com banco.</div>
+<div>4. Explicar praticas de qualidade: organizacao do codigo, autenticacao, validacoes e testes manuais.</div>
+<div>5. Finalizar com resultados obtidos e proximas melhorias.</div>
+</div>
+</div>
+
+</section>
+
 </main>
 
 </div>
@@ -1189,6 +1255,18 @@ lista.innerHTML += `
 <div class="actions">
 
 <button
+class="btn btn-warning"
+onclick="editarCliente(
+'${c._id}',
+'${textoSeguro(c.nome)}',
+'${textoSeguro(c.telefone)}',
+'${textoSeguro(c.endereco)}'
+)"
+>
+Editar
+</button>
+
+<button
 class="btn btn-danger"
 onclick="deletarCliente('${c._id}')"
 >
@@ -1213,6 +1291,45 @@ await fetchAuth(
 API_CLIENTES + "/" + id,
 {
 method:"DELETE"
+}
+);
+
+carregarClientes();
+
+}
+
+async function editarCliente(id,nomeAtual,telefoneAtual,enderecoAtual){
+
+const nome =
+prompt("Nome do cliente",nomeAtual);
+
+if(!nome){
+return;
+}
+
+const telefone =
+prompt("Telefone do cliente",telefoneAtual);
+
+if(!telefone){
+return;
+}
+
+const endereco =
+prompt("Endereco do cliente",enderecoAtual);
+
+if(!endereco){
+return;
+}
+
+await fetchAuth(
+API_CLIENTES + "/" + id,
+{
+method:"PUT",
+body:JSON.stringify({
+nome,
+telefone,
+endereco
+})
 }
 );
 
@@ -1269,11 +1386,17 @@ return String(texto || "")
 .map(linha=>{
 
 const aberto =
-linha.startsWith("[ ]");
+linha.startsWith("[ ]") ||
+linha.startsWith("☐");
+
+const concluido =
+linha.startsWith("[x]") ||
+linha.startsWith("[X]") ||
+linha.startsWith("☑");
 
 return {
-texto: linha.replace(/^\[[ xX]\]\s*/,""),
-concluido: !aberto
+texto: linha.replace(/^\[[ xX]\]\s*/,"").replace(/^[☑☐]\s*/,""),
+concluido: concluido && !aberto
 };
 
 });
@@ -1732,27 +1855,6 @@ Concluir
 </button>
 
 <button
-class="btn btn-primary"
-onclick="enviarWhatsApp('${o._id}','orcamento')"
->
-Orcamento
-</button>
-
-<button
-class="btn btn-primary"
-onclick="enviarWhatsApp('${o._id}','cobranca')"
->
-Cobranca
-</button>
-
-<button
-class="btn btn-primary"
-onclick="enviarWhatsApp('${o._id}','visita')"
->
-Visita
-</button>
-
-<button
 class="btn btn-success"
 onclick="receberPagamento('${o._id}')"
 >
@@ -1906,44 +2008,6 @@ body:JSON.stringify({ pagamentoStatus:"Recebido" })
 );
 
 carregarOrdens();
-
-}
-
-function enviarWhatsApp(id,tipo){
-
-const ordem =
-cacheOrdens.find(o=>o._id === id);
-
-if(!ordem){
-return;
-}
-
-let telefone =
-String(ordem.telefone || "").replace(/\D/g,"");
-
-if(!telefone){
-telefone = prompt("WhatsApp do cliente:");
-telefone = String(telefone || "").replace(/\D/g,"");
-}
-
-if(!telefone){
-return;
-}
-
-if(!telefone.startsWith("55")){
-telefone = "55" + telefone;
-}
-
-const mensagens = {
-orcamento:`Ola ${ordem.cliente}, seu orcamento de ${moeda(ordem.valor)} esta pronto para aprovacao.`,
-cobranca:`Ola ${ordem.cliente}, identificamos pagamento pendente da OS no valor de ${moeda(ordem.valor)}.`,
-visita:`Ola ${ordem.cliente}, sua visita tecnica esta agendada para ${dataHora(ordem.dataAgendada)}.`
-};
-
-window.open(
-"https://wa.me/" + telefone + "?text=" + encodeURIComponent(mensagens[tipo]),
-"_blank"
-);
 
 }
 

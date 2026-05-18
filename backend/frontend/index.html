@@ -1908,11 +1908,11 @@ async function criarOS(){
 
 const cliente =
 document.getElementById("osCliente")
-.value;
+.value.trim();
 
 const valor =
 document.getElementById("osValor")
-.value;
+.value.trim();
 
 const status =
 document.getElementById("osStatus")
@@ -1924,11 +1924,11 @@ document.getElementById("osPrioridade")
 
 const tecnico =
 document.getElementById("osTecnico")
-.value;
+.value.trim();
 
 const telefone =
 document.getElementById("osTelefone")
-.value;
+.value.trim();
 
 const dataAgendada =
 document.getElementById("osDataAgendada")
@@ -1936,14 +1936,20 @@ document.getElementById("osDataAgendada")
 
 const descricao =
 document.getElementById("osDescricao")
-.value;
+.value.trim();
+
+if(!cliente || !descricao || !valor){
+if(window.LS_TOAST) LS_TOAST.warning("Preencha cliente, descrição e valor");
+else alert("Preencha cliente, descrição e valor");
+return;
+}
 
 const checklist = [];
 const historico = [];
 const fotos = [];
 const assinaturas = {};
 
-await fetchAuth(API_ORDENS,{
+const res = await fetchAuth(API_ORDENS,{
 
 method:"POST",
 
@@ -1966,19 +1972,24 @@ assinaturas
 
 });
 
+const data = await res.json();
+
+if(!res.ok){
+if(window.LS_TOAST) LS_TOAST.error(data.error || "Erro ao criar ordem");
+else alert(data.error || "Erro ao criar ordem");
+return;
+}
+
 document.getElementById("osCliente").value="";
 document.getElementById("osValor").value="";
 document.getElementById("osDescricao").value="";
 document.getElementById("osTecnico").value="";
 document.getElementById("osTelefone").value="";
 document.getElementById("osDataAgendada").value="";
-document.getElementById("osChecklist").value="";
-document.getElementById("osHistorico").value="";
-document.getElementById("osFotosAntes").value="";
-document.getElementById("osFotosDepois").value="";
-limparAssinatura();
 
-carregarOrdens();
+await carregarOrdens();
+
+if(window.LS_TOAST) LS_TOAST.success("Ordem criada e lista atualizada");
 
 }
 

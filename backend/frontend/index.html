@@ -418,65 +418,6 @@ button{
 <div class="logo">
 <div class="logo-mark">LS</div>
 <span class="menu-label">Life Services</span>
-</div>
-
-<button type="button" class="btn" id="ls-toggle-sidebar" style="margin-bottom:16px;width:100%;">☰ Menu</button>
-
-<button
-class="menu-btn active"
-onclick="abrirSecao('dashboard',this)"
->
-<span class="menu-label">Dashboard</span>
-</button>
-
-<button
-class="menu-btn"
-onclick="abrirSecao('clientes',this)"
->
-<span class="menu-label">Clientes</span>
-</button>
-
-<button
-class="menu-btn"
-onclick="abrirSecao('estoque',this)"
->
-<span class="menu-label">Estoque</span>
-</button>
-
-<button
-class="menu-btn"
-onclick="abrirSecao('orcamentos',this)"
->
-<span class="menu-label">Orçamentos</span>
-</button>
-
-<button
-class="menu-btn"
-onclick="abrirSecao('ordens',this)"
->
-<span class="menu-label">Ordens</span>
-</button>
-
-<button
-class="menu-btn"
-onclick="abrirSecao('financeiro',this)"
->
-<span class="menu-label">Financeiro</span>
-</button>
-
-<button
-class="btn btn-danger"
-onclick="logout()"
->
-Sair
-</button>
-
-</aside>
-
-<!-- MAIN -->
-
-<main class="main">
-
 <button
 class="theme-orb"
 type="button"
@@ -486,6 +427,75 @@ title="Alternar tema"
 >
 ☯
 </button>
+</div>
+
+<button type="button" class="btn sidebar-toggle" id="ls-toggle-sidebar" style="margin-bottom:16px;width:100%;">
+<span class="toggle-icon">☰</span>
+<span class="menu-label">Menu</span>
+</button>
+
+<button
+class="menu-btn active"
+data-icon="⌂"
+onclick="abrirSecao('dashboard',this)"
+>
+<span class="menu-label">Dashboard</span>
+</button>
+
+<button
+class="menu-btn"
+data-icon="👥"
+onclick="abrirSecao('clientes',this)"
+>
+<span class="menu-label">Clientes</span>
+</button>
+
+<button
+class="menu-btn"
+data-icon="📦"
+onclick="abrirSecao('estoque',this)"
+>
+<span class="menu-label">Estoque</span>
+</button>
+
+<button
+class="menu-btn"
+data-icon="🧾"
+onclick="abrirSecao('orcamentos',this)"
+>
+<span class="menu-label">Orçamentos</span>
+</button>
+
+<button
+class="menu-btn"
+data-icon="🛠"
+onclick="abrirSecao('ordens',this)"
+>
+<span class="menu-label">Ordens</span>
+</button>
+
+<button
+class="menu-btn"
+data-icon="💳"
+onclick="abrirSecao('financeiro',this)"
+>
+<span class="menu-label">Financeiro</span>
+</button>
+
+<button
+class="btn btn-danger"
+id="logoutBtn"
+onclick="logout()"
+>
+<span class="logout-icon">⎋</span>
+<span class="menu-label">Sair</span>
+</button>
+
+</aside>
+
+<!-- MAIN -->
+
+<main class="main">
 
 <!-- DASHBOARD -->
 
@@ -833,18 +843,6 @@ Salvar Cliente
 
 </div>
 
-<div class="card">
-<h2>Portal do cliente</h2>
-<p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Ative o acesso em <a href="/portal" target="_blank">/portal</a>. Cole o ID do cliente da tabela (inspecionar ou após salvar).</p>
-<div class="form-grid">
-<input id="portalClienteId" placeholder="ID do cliente (MongoDB _id)">
-<input id="portalEmailAtivar" placeholder="E-mail de login">
-<input id="portalSenhaAtivar" type="password" placeholder="Senha inicial">
-</div>
-<br>
-<button class="btn btn-success" type="button" onclick="ativarPortalCliente()">Ativar portal</button>
-</div>
-
 </section>
 
 <!-- ORDENS -->
@@ -1029,13 +1027,27 @@ Saída
 
 <input
 id="finDescricao"
-placeholder="Descrição"
+placeholder="Descrição (ex: venda de câmera, compra de cabo)"
 >
 
 <input
-id="finValor"
-placeholder="Valor"
+id="finItem"
+placeholder="Produto ou serviço"
+>
+
+<input
+id="finQuantidade"
+placeholder="Quantidade"
 type="number"
+min="1"
+value="1"
+>
+
+<input
+id="finValorUnitario"
+placeholder="Valor unitário"
+type="number"
+step="0.01"
 >
 
 </div>
@@ -1062,6 +1074,9 @@ Salvar Lançamento
 <tr>
 <th>Tipo</th>
 <th>Descrição</th>
+<th>Item</th>
+<th>Qtd</th>
+<th>Unitário</th>
 <th>Valor</th>
 <th>Data</th>
 <th>Ações</th>
@@ -2504,15 +2519,24 @@ document.getElementById("finTipo")
 
 const descricao =
 document.getElementById("finDescricao")
-.value;
+.value.trim();
+
+const item =
+document.getElementById("finItem")
+.value.trim();
+
+const quantidade =
+Number(document.getElementById("finQuantidade").value) || 1;
+
+const valorUnitario =
+Number(document.getElementById("finValorUnitario").value) || 0;
 
 const valor =
-document.getElementById("finValor")
-.value;
+quantidade * valorUnitario;
 
-if(!descricao || !valor){
+if(!descricao || !item || !valorUnitario){
 
-alert("Preencha os campos");
+alert("Preencha descrição, item e valor unitário");
 
 return;
 
@@ -2526,6 +2550,9 @@ body:JSON.stringify({
 
 tipo,
 descricao,
+item,
+quantidade,
+valorUnitario,
 valor
 
 })
@@ -2537,10 +2564,13 @@ document.getElementById(
 ).value = "";
 
 document.getElementById(
-"finValor"
+"finItem"
 ).value = "";
 
-carregarFinanceiro();
+document.getElementById("finQuantidade").value = "1";
+document.getElementById("finValorUnitario").value = "";
+
+await carregarFinanceiro();
 
 }
 
@@ -2581,6 +2611,18 @@ lista.innerHTML += `
 <td>${item.tipo}</td>
 
 <td>${item.descricao}</td>
+
+<td>
+${textoSeguro(item.item || item.descricao)}
+</td>
+
+<td>
+${Number(item.quantidade || 1)}
+</td>
+
+<td>
+R$ ${Number(item.valorUnitario || item.valor || 0).toFixed(2)}
+</td>
 
 <td>
 R$ ${Number(item.valor).toFixed(2)}

@@ -20,11 +20,20 @@
     const btn = document.getElementById('ls-toggle-sidebar');
     if (!sidebar || !btn) return;
 
+    const isMobile = window.matchMedia('(max-width: 720px)').matches;
+
+    if (isMobile) {
+      sidebar.classList.remove('collapsed');
+      localStorage.removeItem('ls_sidebar_collapsed');
+      return;
+    }
+
     if (localStorage.getItem('ls_sidebar_collapsed') === '1') {
       sidebar.classList.add('collapsed');
     }
 
     btn.addEventListener('click', function () {
+      if (window.matchMedia('(max-width: 720px)').matches) return;
       sidebar.classList.toggle('collapsed');
       localStorage.setItem('ls_sidebar_collapsed', sidebar.classList.contains('collapsed') ? '1' : '0');
     });

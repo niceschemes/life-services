@@ -646,17 +646,6 @@ id="ordensAtrasadas"
 <div id="notificacoes" class="mini-list"></div>
 </div>
 
-<div class="card">
-<h2>Entrega UNIFEOB</h2>
-<div class="mini-list">
-<div>Aplicação web funcional para Computação em Nuvem.</div>
-<div>Escopo: clientes, estoque, orçamentos, ordens de serviço e financeiro.</div>
-<div>Deploy em nuvem: Render + MongoDB externo via variável MONGO_URL.</div>
-<div>Qualidade: autenticação JWT, organização por camadas e validação com npm test.</div>
-<div>Documentos de apoio: roteiro de vídeo, pôster, termo de consentimento e relatório de extensão na pasta docs.</div>
-</div>
-</div>
-
 </section>
 
 <!-- KANBAN -->
@@ -1313,7 +1302,14 @@ const AUTH =
 BASE + "/auth/login";
 
 let TOKEN =
-localStorage.getItem("token");
+sessionStorage.getItem("token");
+
+// Remove sessões antigas que ficavam salvas permanentemente no navegador.
+localStorage.removeItem("token");
+localStorage.removeItem("pending_2fa_code");
+localStorage.removeItem("ls_user");
+localStorage.removeItem("ls_company");
+localStorage.removeItem("ls_refresh");
 
 let cacheOrdens = [];
 let assinaturaDesenhada = false;
@@ -1436,7 +1432,7 @@ headers:{
 body:JSON.stringify({
 usuario,
 senha,
-twoFactorCode: localStorage.getItem("pending_2fa_code") || undefined
+twoFactorCode: sessionStorage.getItem("pending_2fa_code") || undefined
 })
 
 });
@@ -1446,27 +1442,27 @@ const data = await res.json();
 if(data.requiresTwoFactor){
 const code = prompt("Código 2FA (demo: " + data.demoCode + ")");
 if(!code){
-localStorage.removeItem("pending_2fa_code");
+sessionStorage.removeItem("pending_2fa_code");
 if(window.LS_TOAST) LS_TOAST.warning("Login cancelado: código 2FA obrigatório");
 return;
 }
-localStorage.setItem("pending_2fa_code", code);
+sessionStorage.setItem("pending_2fa_code", code);
 return login();
 }
 
 if(data.token){
 
-localStorage.removeItem("pending_2fa_code");
-localStorage.setItem("token", data.token);
-if(data.user) localStorage.setItem("ls_user", JSON.stringify(data.user));
-if(data.company) localStorage.setItem("ls_company", JSON.stringify(data.company));
+sessionStorage.removeItem("pending_2fa_code");
+sessionStorage.setItem("token", data.token);
+if(data.user) sessionStorage.setItem("ls_user", JSON.stringify(data.user));
+if(data.company) sessionStorage.setItem("ls_company", JSON.stringify(data.company));
 if(window.LS_TOAST) LS_TOAST.success("Bem-vindo ao Life Services Enterprise");
 
 location.reload();
 
 }else{
 
-localStorage.removeItem("pending_2fa_code");
+sessionStorage.removeItem("pending_2fa_code");
 if(window.LS_TOAST) LS_TOAST.error(data.error || "Login inválido");
 else alert("Login inválido");
 
@@ -1476,6 +1472,11 @@ else alert("Login inválido");
 
 function logout(){
 
+sessionStorage.removeItem("token");
+sessionStorage.removeItem("pending_2fa_code");
+sessionStorage.removeItem("ls_user");
+sessionStorage.removeItem("ls_company");
+sessionStorage.removeItem("ls_refresh");
 localStorage.removeItem("token");
 localStorage.removeItem("pending_2fa_code");
 localStorage.removeItem("ls_user");

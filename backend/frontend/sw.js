@@ -1,4 +1,4 @@
-const CACHE = 'life-services-v4';
+const CACHE = 'life-services-v6';
 const ASSETS = [
   '/',
   '/assets/css/design-system.css',

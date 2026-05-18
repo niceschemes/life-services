@@ -465,13 +465,6 @@ onclick="abrirSecao('financeiro',this)"
 </button>
 
 <button
-class="btn btn-warning"
-onclick="alternarTema()"
->
-Tema
-</button>
-
-<button
 class="btn btn-danger"
 onclick="logout()"
 >
@@ -483,6 +476,16 @@ Sair
 <!-- MAIN -->
 
 <main class="main">
+
+<button
+class="theme-orb"
+type="button"
+onclick="alternarTema()"
+aria-label="Alternar tema"
+title="Alternar tema"
+>
+☯
+</button>
 
 <!-- DASHBOARD -->
 
@@ -1472,6 +1475,7 @@ else alert("Login inválido");
 
 function logout(){
 
+TOKEN = null;
 sessionStorage.removeItem("token");
 sessionStorage.removeItem("pending_2fa_code");
 sessionStorage.removeItem("ls_user");
@@ -1488,9 +1492,29 @@ location.reload();
 
 }
 
+function mostrarLoginSessaoExpirada(){
+TOKEN = null;
+sessionStorage.removeItem("token");
+sessionStorage.removeItem("pending_2fa_code");
+sessionStorage.removeItem("ls_user");
+sessionStorage.removeItem("ls_company");
+sessionStorage.removeItem("ls_refresh");
+if(window.LS_REALTIME) LS_REALTIME.disconnect();
+document.getElementById("loginBox").style.display = "flex";
+document.getElementById("app").style.display = "none";
+}
+
 /* FETCH AUTH */
 
 async function fetchAuth(url,options={}){
+
+if(!TOKEN){
+mostrarLoginSessaoExpirada();
+return new Response(JSON.stringify({ error:"Sem sessão ativa" }), {
+status:401,
+headers:{ "Content-Type":"application/json" }
+});
+}
 
 const res = await fetch(url,{
 
@@ -1503,6 +1527,11 @@ headers:{
 }
 
 });
+
+if(res.status === 401){
+mostrarLoginSessaoExpirada();
+if(window.LS_TOAST) LS_TOAST.error("Sessão expirada. Faça login novamente.");
+}
 
 return res;
 

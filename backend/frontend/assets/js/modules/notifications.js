@@ -7,6 +7,7 @@
 
   async function carregar() {
     const res = await global.LS_API.fetchAuth(api(''));
+    if (!res.ok) return;
     lista = await res.json();
     renderPainel();
     atualizarBadge();
@@ -14,6 +15,7 @@
 
   async function atualizarBadge() {
     const res = await global.LS_API.fetchAuth(api('/unread-count'));
+    if (!res.ok) return;
     const data = await res.json();
     const dot = document.querySelector('.notif-bell .dot');
     if (dot) dot.style.display = (data.count > 0) ? 'block' : 'none';

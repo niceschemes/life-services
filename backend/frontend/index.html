@@ -480,9 +480,37 @@ onclick="abrirSecao('financeiro',this)"
 
 <button
 class="menu-btn"
+onclick="abrirSecao('pagamentos',this)"
+>
+<span class="menu-label">Pagamentos</span>
+</button>
+
+<button
+class="menu-btn"
+onclick="abrirSecao('automacoes',this)"
+>
+<span class="menu-label">Automações</span>
+</button>
+
+<button
+class="menu-btn"
 onclick="abrirSecao('ia',this)"
 >
 <span class="menu-label">IA Assistente</span>
+</button>
+
+<button
+class="menu-btn"
+onclick="abrirSecao('seguranca',this)"
+>
+<span class="menu-label">Segurança</span>
+</button>
+
+<button
+class="menu-btn"
+onclick="abrirSecao('master',this)"
+>
+<span class="menu-label">Master</span>
 </button>
 
 <button
@@ -1137,6 +1165,95 @@ Salvar Lançamento
 
 </section>
 
+<!-- PAGAMENTOS -->
+
+<section id="pagamentos" class="section">
+<div class="card">
+<h2>Criar cobrança</h2>
+<p style="color:var(--muted);margin:8px 0 14px;">PIX, Mercado Pago e Stripe preparados em modo demo/adaptador.</p>
+<div class="form-grid">
+<input id="payDescricao" placeholder="Descrição">
+<input id="payValor" type="number" step="0.01" placeholder="Valor">
+<select id="payProvider">
+<option value="pix">PIX</option>
+<option value="mercado_pago">Mercado Pago</option>
+<option value="stripe">Stripe</option>
+<option value="manual">Manual</option>
+</select>
+</div>
+<br>
+<button class="btn btn-primary" type="button" onclick="LS_FASE4.criarPagamento()">Criar cobrança</button>
+</div>
+
+<div class="card">
+<h2>Assinatura SaaS</h2>
+<div id="subscriptionBox" class="mini-list"></div>
+</div>
+
+<div class="card">
+<h2>Cobranças</h2>
+<table class="table">
+<thead><tr><th>Descrição</th><th>Provider</th><th>Status</th><th>Valor</th><th>Ações</th></tr></thead>
+<tbody id="listaPagamentos"></tbody>
+</table>
+</div>
+</section>
+
+<!-- AUTOMAÇÕES -->
+
+<section id="automacoes" class="section">
+<div class="card">
+<h2>Nova automação</h2>
+<div class="form-grid">
+<input id="autoNome" placeholder="Nome da automação">
+<select id="autoTrigger">
+<option value="manual">Manual</option>
+<option value="ordem_criada">Ordem criada</option>
+<option value="orcamento_aprovado">Orçamento aprovado</option>
+<option value="pagamento_atrasado">Pagamento atrasado</option>
+<option value="estoque_baixo">Estoque baixo</option>
+</select>
+<input id="autoDescricao" placeholder="Mensagem/descrição">
+</div>
+<br>
+<button class="btn btn-primary" type="button" onclick="LS_FASE4.criarAutomacao()">Criar automação</button>
+</div>
+
+<div class="card">
+<h2>Workflows ativos</h2>
+<div id="listaAutomacoes" class="mini-list"></div>
+</div>
+</section>
+
+<!-- SEGURANÇA -->
+
+<section id="seguranca" class="section">
+<div class="card">
+<h2>2FA e recuperação de senha</h2>
+<p style="color:var(--muted);margin:8px 0 14px;">Modo demo para apresentação: o código aparece na tela. Em produção, iria para app autenticador/e-mail.</p>
+<div class="toolbar">
+<button class="btn btn-primary" type="button" onclick="LS_FASE4.setup2FA()">Gerar código 2FA</button>
+<input id="twoFactorCode" placeholder="Código 2FA">
+<button class="btn btn-success" type="button" onclick="LS_FASE4.verify2FA()">Ativar 2FA</button>
+</div>
+<div class="toolbar">
+<input id="resetUser" placeholder="Usuário ou e-mail">
+<button class="btn btn-warning" type="button" onclick="LS_FASE4.resetSenhaDemo()">Gerar token reset</button>
+</div>
+<div id="securityOutput" class="mini-list"></div>
+</div>
+</section>
+
+<!-- MASTER ADMIN -->
+
+<section id="master" class="section">
+<div class="card">
+<h2>Central master SaaS</h2>
+<p style="color:var(--muted);margin:8px 0 14px;">Visão global de empresas, assinaturas, MRR e uso da plataforma.</p>
+<div id="masterOverview" class="mini-list"></div>
+</div>
+</section>
+
 <!-- AGENDA -->
 
 <section id="agenda" class="section">
@@ -1253,6 +1370,7 @@ Gerar PDF
 <script src="/assets/js/modules/orcamentos.js"></script>
 <script src="/assets/js/modules/crm.js"></script>
 <script src="/assets/js/modules/estoque.js"></script>
+<script src="/assets/js/modules/fase4.js"></script>
 
 <script>
 
@@ -1302,6 +1420,9 @@ if(secao === "orcamentos" && window.LS_ORCAMENTOS) LS_ORCAMENTOS.carregar();
 if(secao === "crm" && window.LS_CRM) LS_CRM.carregar();
 if(secao === "estoque" && window.LS_ESTOQUE) LS_ESTOQUE.carregar();
 if(secao === "chat" && window.LS_CHAT) LS_CHAT.carregar();
+if(secao === "pagamentos" && window.LS_FASE4) LS_FASE4.carregarPagamentos();
+if(secao === "automacoes" && window.LS_FASE4) LS_FASE4.carregarAutomacoes();
+if(secao === "master" && window.LS_FASE4) LS_FASE4.carregarMaster();
 
 }
 
@@ -1384,15 +1505,22 @@ headers:{
 
 body:JSON.stringify({
 usuario,
-senha
+senha,
+twoFactorCode: localStorage.getItem("pending_2fa_code") || undefined
 })
 
 });
 
 const data = await res.json();
 
+if(data.requiresTwoFactor){
+localStorage.setItem("pending_2fa_code", prompt("Código 2FA (demo: " + data.demoCode + ")") || "");
+return login();
+}
+
 if(data.token){
 
+localStorage.removeItem("pending_2fa_code");
 localStorage.setItem("token", data.token);
 if(data.user) localStorage.setItem("ls_user", JSON.stringify(data.user));
 if(data.company) localStorage.setItem("ls_company", JSON.stringify(data.company));

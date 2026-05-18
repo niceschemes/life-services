@@ -41,6 +41,10 @@ app.use('/crm', require('./routes/crm'));
 app.use('/notifications', require('./routes/notifications'));
 app.use('/chat', require('./routes/chat'));
 app.use('/portal', require('./routes/portal'));
+app.use('/payments', require('./routes/payments'));
+app.use('/security', require('./routes/security'));
+app.use('/automations', require('./routes/automations'));
+app.use('/master', require('./routes/master'));
 
 const Cliente = require('./models/clientes');
 const Servico = require('./models/servico');
@@ -76,5 +80,5 @@ app.use((err, req, res, next) => {
 });
 
 server.listen(config.port, () => {
-  console.log(`Life Services Enterprise v2.2 — porta ${config.port} (HTTP + WebSocket)`);
+  console.log(`Life Services Enterprise v2.3 — porta ${config.port} (HTTP + WebSocket)`);
 });

@@ -19,6 +19,12 @@ const UserSchema = new mongoose.Schema({
   permissions: [{ type: String }],
   avatar: { type: String, default: '' },
   refreshToken: { type: String, default: '' },
+  twoFactor: {
+    enabled: { type: Boolean, default: false },
+    secret: { type: String, default: '' },
+    lastCode: { type: String, default: '' },
+    expiresAt: { type: Date }
+  },
   isActive: { type: Boolean, default: true },
   lastLogin: { type: Date }
 }, { timestamps: true });

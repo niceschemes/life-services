@@ -6,6 +6,7 @@ const config = require('../config');
 const { permissionsForRole, ROLES } = require('../config/permissions');
 const slugify = require('../utils/slugify');
 const { logAction } = require('./auditService');
+const securityService = require('./securityService');
 
 function signAccessToken(user) {
   return jwt.sign(
@@ -112,7 +113,7 @@ async function registerEnterprise(payload, req) {
   };
 }
 
-async function login({ usuario, senha, companySlug }, req) {
+async function login({ usuario, senha, companySlug, twoFactorCode }, req) {
   let user;
 
   if (companySlug) {
@@ -138,6 +139,26 @@ async function login({ usuario, senha, companySlug }, req) {
     const err = new Error('Senha inválida');
     err.status = 401;
     throw err;
+  }
+
+  if (user.twoFactor?.enabled) {
+    if (!twoFactorCode) {
+      const demoCode = await securityService.generateLoginTwoFactor(user);
+      return {
+        requiresTwoFactor: true,
+        message: 'Código 2FA obrigatório',
+        // Demonstração acadêmica: em produção, não retornar o código.
+        demoCode
+      };
+    }
+
+    if (!securityService.isLoginTwoFactorValid(user, twoFactorCode)) {
+      const err = new Error('Código 2FA inválido');
+      err.status = 401;
+      throw err;
+    }
+
+    user.twoFactor.lastCode = '';
   }
 
   user.lastLogin = new Date();

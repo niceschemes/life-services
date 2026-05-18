@@ -11,13 +11,17 @@ const orcamentoController = require('../../../controllers/v1/orcamentoController
 const estoqueController = require('../../../controllers/v1/estoqueController');
 const crmController = require('../../../controllers/v1/crmController');
 const pdfController = require('../../../controllers/v1/pdfController');
+const paymentController = require('../../../controllers/v1/paymentController');
+const securityController = require('../../../controllers/v1/securityController');
+const automationController = require('../../../controllers/v1/automationController');
+const masterController = require('../../../controllers/v1/masterController');
 const rbac = require('../../../middleware/rbac');
 
 router.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     product: 'Life Services Enterprise',
-    version: '2.2.0',
+    version: '2.3.0',
     timestamp: new Date().toISOString()
   });
 });
@@ -60,5 +64,24 @@ router.patch('/crm/clientes/:clienteId/etapa', auth, rbac('crm'), crmController.
 router.post('/crm/clientes/:clienteId/followup', auth, rbac('crm'), crmController.followUp);
 
 router.get('/pdf/ordens/:id', auth, rbac('ordens'), pdfController.ordem);
+
+router.get('/payments', auth, rbac('financeiro'), paymentController.list);
+router.post('/payments', auth, rbac('financeiro'), paymentController.create);
+router.patch('/payments/:id/confirmar', auth, rbac('financeiro'), paymentController.markPaid);
+router.get('/subscription/mine', auth, paymentController.subscriptionMine);
+router.patch('/subscription/mine', auth, rbac('empresas'), paymentController.updateSubscription);
+
+router.post('/security/password/request-reset', securityController.requestPasswordReset);
+router.post('/security/password/reset', securityController.resetPassword);
+router.post('/security/2fa/setup', auth, securityController.setupTwoFactor);
+router.post('/security/2fa/verify', auth, securityController.verifyTwoFactor);
+
+router.get('/automations', auth, rbac('automacoes'), automationController.list);
+router.post('/automations', auth, rbac('automacoes'), automationController.create);
+router.post('/automations/:id/run', auth, rbac('automacoes'), automationController.runManual);
+router.post('/automations/run-trigger-demo', auth, rbac('automacoes'), automationController.runTriggerDemo);
+
+router.get('/master/overview', auth, rbac('master'), masterController.overview);
+router.get('/master/companies', auth, rbac('master'), masterController.companies);
 
 module.exports = router;

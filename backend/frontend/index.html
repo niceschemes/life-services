@@ -537,7 +537,7 @@ Sair
 <div class="module-visual">🛠️</div>
 <div>
 <strong>Ordens de Serviço</strong>
-<span>Registre serviços, status, responsável, valor e assinatura.</span>
+<span>Registre serviços, status, responsável, valor e agendamento.</span>
 </div>
 </button>
 
@@ -915,72 +915,6 @@ id="osDescricao"
 placeholder="Descrição"
 rows="4"
 ></textarea>
-
-<br><br>
-
-<div class="form-grid">
-
-<textarea
-id="osChecklist"
-placeholder="Itens do checklist, um por linha&#10;instalacao eletrica&#10;limpeza&#10;testes&#10;assinatura cliente"
-rows="5"
-></textarea>
-
-<textarea
-id="osHistorico"
-placeholder="Historico do atendimento&#10;12/05 - orcamento enviado&#10;13/05 - cliente aprovou&#10;15/05 - servico concluido&#10;16/05 - pagamento recebido"
-rows="5"
-></textarea>
-
-</div>
-
-<br>
-
-<div class="form-grid">
-
-<label>
-Fotos antes
-<input
-id="osFotosAntes"
-type="file"
-accept="image/*"
-multiple
->
-</label>
-
-<label>
-Fotos depois
-<input
-id="osFotosDepois"
-type="file"
-accept="image/*"
-multiple
->
-</label>
-
-<select id="assinaturaTipo">
-<option value="orcamento">Assinatura do orcamento</option>
-<option value="os">Assinatura da OS</option>
-<option value="entrega">Assinatura da entrega</option>
-</select>
-
-</div>
-
-<br>
-
-<canvas
-id="assinaturaCanvas"
-class="signature-pad"
-></canvas>
-
-<div class="toolbar">
-<button
-class="btn btn-warning"
-onclick="limparAssinatura()"
->
-Limpar assinatura
-</button>
-</div>
 
 <br><br>
 
@@ -2004,35 +1938,10 @@ const descricao =
 document.getElementById("osDescricao")
 .value;
 
-const checklist =
-parseChecklist(
-document.getElementById("osChecklist").value
-);
-
-const historico =
-parseHistorico(
-document.getElementById("osHistorico").value
-);
-
-const fotos =
-[
-...(await lerFotos("osFotosAntes","Antes")),
-...(await lerFotos("osFotosDepois","Depois"))
-];
-
+const checklist = [];
+const historico = [];
+const fotos = [];
 const assinaturas = {};
-
-if(assinaturaDesenhada){
-
-const tipoAssinatura =
-document.getElementById("assinaturaTipo").value;
-
-assinaturas[tipoAssinatura] =
-document
-.getElementById("assinaturaCanvas")
-.toDataURL("image/png");
-
-}
 
 await fetchAuth(API_ORDENS,{
 
@@ -2152,45 +2061,6 @@ if(o.status === "Em andamento"){
 corStatus = "#2563eb";
 }
 
-const checklistHtml =
-(o.checklist || [])
-.map((item,index)=>`
-<label>
-<input
-type="checkbox"
-${item.concluido ? "checked" : ""}
-onchange="alternarChecklist('${o._id}',${index},this.checked)"
->
-${textoSeguro(item.texto)}
-</label>
-`)
-.join("");
-
-const historicoHtml =
-(o.historico || [])
-.map(item=>`
-<div>
-${new Date(item.data).toLocaleDateString("pt-BR")} - ${textoSeguro(item.descricao)}
-</div>
-`)
-.join("");
-
-const fotosHtml =
-(o.fotos || [])
-.slice(0,6)
-.map(foto=>`
-<img
-src="${foto.url}"
-title="${textoSeguro(foto.tipo)} - ${textoSeguro(foto.nome)}"
->
-`)
-.join("");
-
-const assinaturaHtml =
-o.assinaturas && Object.values(o.assinaturas).some(Boolean)
-? "<div>Assinatura registrada</div>"
-: "<div>Sem assinatura</div>";
-
 lista.innerHTML += `
 
 <tr>
@@ -2212,20 +2082,8 @@ ${textoSeguro(o.prioridade || "Media")}
 ${textoSeguro(o.descricao)}
 <div class="detail-grid">
 <div>
-<b>Checklist</b>
-<div class="mini-list">${checklistHtml || "<div>Nenhum item</div>"}</div>
-</div>
-<div>
-<b>Historico</b>
-<div class="mini-list">${historicoHtml || "<div>Nenhum evento</div>"}</div>
-</div>
-<div>
-<b>Fotos</b>
-<div class="photo-row">${fotosHtml || "<span>Sem fotos</span>"}</div>
-</div>
-<div>
-<b>Assinatura</b>
-<div class="mini-list">${assinaturaHtml}</div>
+<b>Observações</b>
+<div class="mini-list"><div>${textoSeguro(o.observacoes || "Sem observações")}</div></div>
 </div>
 </div>
 </td>

@@ -229,8 +229,8 @@
 
 .theme-orb {
   margin-left: auto;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 50%;
   background:
@@ -240,7 +240,7 @@
   display: grid;
   place-items: center;
   flex: 0 0 auto;
-  font-size: 20px;
+  font-size: 21px;
   line-height: 1;
   cursor: pointer;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
@@ -260,7 +260,10 @@ body.light .theme-orb {
 }
 
 body.ls-enterprise .sidebar.ls-sidebar.collapsed .theme-orb {
-  margin-left: 0;
+  display: grid !important;
+  margin: 14px auto 0;
+  width: 34px;
+  height: 34px;
 }
 
 body.ls-enterprise .sidebar.ls-sidebar.collapsed {
@@ -274,10 +277,6 @@ body.ls-enterprise .sidebar.ls-sidebar.collapsed .logo {
 
 body.ls-enterprise .sidebar.ls-sidebar.collapsed .logo-mark {
   margin: 0 auto;
-}
-
-body.ls-enterprise .sidebar.ls-sidebar.collapsed .theme-orb {
-  display: none;
 }
 
 body.ls-enterprise .sidebar.ls-sidebar.collapsed .sidebar-toggle {

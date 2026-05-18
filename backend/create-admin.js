@@ -18,7 +18,16 @@ mongoose.connect(config.mongoUrl)
   if(usuarioExiste){
 
     usuarioExiste.senha = senhaHash;
+    usuarioExiste.nome = "Administrador";
+    usuarioExiste.role = "super_admin";
     usuarioExiste.isActive = true;
+    usuarioExiste.refreshToken = "";
+    usuarioExiste.twoFactor = {
+      enabled: false,
+      secret: "",
+      lastCode: "",
+      expiresAt: undefined
+    };
 
     await usuarioExiste.save();
 
@@ -34,7 +43,7 @@ mongoose.connect(config.mongoUrl)
 
       nome: "Administrador",
 
-      role: "admin",
+      role: "super_admin",
 
       isActive: true
 

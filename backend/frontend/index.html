@@ -438,9 +438,9 @@ onclick="abrirSecao('clientes',this)"
 
 <button
 class="menu-btn"
-onclick="abrirSecao('crm',this)"
+onclick="abrirSecao('estoque',this)"
 >
-<span class="menu-label">CRM</span>
+<span class="menu-label">Estoque</span>
 </button>
 
 <button
@@ -452,13 +452,6 @@ onclick="abrirSecao('orcamentos',this)"
 
 <button
 class="menu-btn"
-onclick="abrirSecao('estoque',this)"
->
-<span class="menu-label">Estoque</span>
-</button>
-
-<button
-class="menu-btn"
 onclick="abrirSecao('ordens',this)"
 >
 <span class="menu-label">Ordens</span>
@@ -466,79 +459,9 @@ onclick="abrirSecao('ordens',this)"
 
 <button
 class="menu-btn"
-onclick="abrirSecao('kanban',this)"
->
-<span class="menu-label">Kanban</span>
-</button>
-
-<button
-class="menu-btn"
 onclick="abrirSecao('financeiro',this)"
 >
 <span class="menu-label">Financeiro</span>
-</button>
-
-<button
-class="menu-btn"
-onclick="abrirSecao('pagamentos',this)"
->
-<span class="menu-label">Pagamentos</span>
-</button>
-
-<button
-class="menu-btn"
-onclick="abrirSecao('automacoes',this)"
->
-<span class="menu-label">Automações</span>
-</button>
-
-<button
-class="menu-btn"
-onclick="abrirSecao('ia',this)"
->
-<span class="menu-label">IA Assistente</span>
-</button>
-
-<button
-class="menu-btn"
-onclick="abrirSecao('seguranca',this)"
->
-<span class="menu-label">Segurança</span>
-</button>
-
-<button
-class="menu-btn"
-onclick="abrirSecao('master',this)"
->
-<span class="menu-label">Master</span>
-</button>
-
-<button
-class="menu-btn"
-onclick="abrirSecao('chat',this)"
->
-<span class="menu-label">Chat</span>
-</button>
-
-<button
-class="menu-btn"
-onclick="abrirSecao('agenda',this)"
->
-<span class="menu-label">Agenda</span>
-</button>
-
-<button
-class="menu-btn"
-onclick="abrirSecao('relatorios',this)"
->
-Relatorios
-</button>
-
-<button
-class="menu-btn"
-onclick="abrirSecao('projeto',this)"
->
-Projeto
 </button>
 
 <button
@@ -566,7 +489,7 @@ Sair
 <section id="dashboard" class="section active">
 
 <div class="topbar-enterprise">
-<input class="search-pill" placeholder="Buscar clientes, ordens, relatórios..." disabled>
+<input class="search-pill" placeholder="Aplicativo simples para estoque, orçamentos e ordens" disabled>
 <div class="notif-bell" title="Notificações" onclick="LS_NOTIFICATIONS.togglePainel()">🔔<span class="dot"></span></div>
 </div>
 
@@ -582,6 +505,58 @@ Sair
 <button class="btn" type="button" style="width:auto;padding:6px 12px;" onclick="LS_NOTIFICATIONS.marcarTodas()">Marcar lidas</button>
 </div>
 <div id="notifPanelList"></div>
+</div>
+
+<div class="module-hub">
+
+<button class="module-card module-estoque" type="button" onclick="abrirModulo('estoque')">
+<div class="module-visual">📦</div>
+<div>
+<strong>Controle de Estoque</strong>
+<span>Cadastre produtos, registre entrada e saída, acompanhe estoque mínimo.</span>
+</div>
+</button>
+
+<button class="module-card module-orcamentos" type="button" onclick="abrirModulo('orcamentos')">
+<div class="module-visual">🧾</div>
+<div>
+<strong>Gerar Orçamentos</strong>
+<span>Monte propostas, aprove, duplique e gere PDF profissional.</span>
+</div>
+</button>
+
+<button class="module-card module-clientes" type="button" onclick="abrirModulo('clientes')">
+<div class="module-visual">👥</div>
+<div>
+<strong>Clientes</strong>
+<span>Cadastre clientes e mantenha os dados organizados para orçamento e OS.</span>
+</div>
+</button>
+
+<button class="module-card module-ordens" type="button" onclick="abrirModulo('ordens')">
+<div class="module-visual">🛠️</div>
+<div>
+<strong>Ordens de Serviço</strong>
+<span>Registre serviços, status, responsável, valor e assinatura.</span>
+</div>
+</button>
+
+<button class="module-card module-financeiro" type="button" onclick="abrirModulo('financeiro')">
+<div class="module-visual">💳</div>
+<div>
+<strong>Financeiro</strong>
+<span>Controle entradas, saídas, saldo e movimentações básicas.</span>
+</div>
+</button>
+
+<button class="module-card module-dashboard" type="button" onclick="abrirModulo('dashboard')">
+<div class="module-visual">📊</div>
+<div>
+<strong>Resumo Geral</strong>
+<span>Veja indicadores de clientes, ordens, pendências e faturamento.</span>
+</div>
+</button>
+
 </div>
 
 <div class="stats">
@@ -669,6 +644,17 @@ id="ordensAtrasadas"
 <div class="card">
 <h2>Notificacoes</h2>
 <div id="notificacoes" class="mini-list"></div>
+</div>
+
+<div class="card">
+<h2>Entrega UNIFEOB</h2>
+<div class="mini-list">
+<div>Aplicação web funcional para Computação em Nuvem.</div>
+<div>Escopo: clientes, estoque, orçamentos, ordens de serviço e financeiro.</div>
+<div>Deploy em nuvem: Render + MongoDB externo via variável MONGO_URL.</div>
+<div>Qualidade: autenticação JWT, organização por camadas e validação com npm test.</div>
+<div>Documentos de apoio: roteiro de vídeo, pôster, termo de consentimento e relatório de extensão na pasta docs.</div>
+</div>
 </div>
 
 </section>
@@ -1426,6 +1412,16 @@ if(secao === "master" && window.LS_FASE4) LS_FASE4.carregarMaster();
 
 }
 
+function abrirModulo(secao){
+const botao = Array.from(document.querySelectorAll(".menu-btn"))
+.find(b=>b.getAttribute("onclick") && b.getAttribute("onclick").includes("'" + secao + "'"));
+
+if(botao){
+abrirSecao(secao,botao);
+window.scrollTo({ top:0, behavior:"smooth" });
+}
+}
+
 async function baixarPdfOS(id){
 if(!window.LS_API) return;
 try{
@@ -1514,7 +1510,13 @@ twoFactorCode: localStorage.getItem("pending_2fa_code") || undefined
 const data = await res.json();
 
 if(data.requiresTwoFactor){
-localStorage.setItem("pending_2fa_code", prompt("Código 2FA (demo: " + data.demoCode + ")") || "");
+const code = prompt("Código 2FA (demo: " + data.demoCode + ")");
+if(!code){
+localStorage.removeItem("pending_2fa_code");
+if(window.LS_TOAST) LS_TOAST.warning("Login cancelado: código 2FA obrigatório");
+return;
+}
+localStorage.setItem("pending_2fa_code", code);
 return login();
 }
 
@@ -1530,6 +1532,7 @@ location.reload();
 
 }else{
 
+localStorage.removeItem("pending_2fa_code");
 if(window.LS_TOAST) LS_TOAST.error(data.error || "Login inválido");
 else alert("Login inválido");
 
@@ -1540,6 +1543,11 @@ else alert("Login inválido");
 function logout(){
 
 localStorage.removeItem("token");
+localStorage.removeItem("pending_2fa_code");
+localStorage.removeItem("ls_user");
+localStorage.removeItem("ls_company");
+localStorage.removeItem("ls_refresh");
+if(window.LS_REALTIME) LS_REALTIME.disconnect();
 
 location.reload();
 

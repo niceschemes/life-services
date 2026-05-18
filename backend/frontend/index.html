@@ -1353,7 +1353,7 @@ Gerar PDF
 <script src="/assets/js/core/realtime.js"></script>
 <script src="/assets/js/modules/notifications.js"></script>
 <script src="/assets/js/modules/chat.js"></script>
-<script src="/assets/js/modules/orcamentos.js"></script>
+<script src="/assets/js/modules/orcamentos.js?v=4"></script>
 <script src="/assets/js/modules/crm.js"></script>
 <script src="/assets/js/modules/estoque.js"></script>
 <script src="/assets/js/modules/fase4.js"></script>
@@ -1579,17 +1579,23 @@ async function cadastrarCliente(){
 
 const nome =
 document.getElementById("nome")
-.value;
+.value.trim();
 
 const telefone =
 document.getElementById("telefone")
-.value;
+.value.trim();
 
 const endereco =
 document.getElementById("endereco")
-.value;
+.value.trim();
 
-await fetchAuth(API_CLIENTES,{
+if(!nome){
+if(window.LS_TOAST) LS_TOAST.warning("Informe o nome do cliente");
+else alert("Informe o nome do cliente");
+return;
+}
+
+const res = await fetchAuth(API_CLIENTES,{
 
 method:"POST",
 
@@ -1601,11 +1607,21 @@ endereco
 
 });
 
+const data = await res.json();
+
+if(!res.ok){
+if(window.LS_TOAST) LS_TOAST.error(data.error || "Erro ao salvar cliente");
+else alert(data.error || "Erro ao salvar cliente");
+return;
+}
+
 document.getElementById("nome").value="";
 document.getElementById("telefone").value="";
 document.getElementById("endereco").value="";
 
-carregarClientes();
+await carregarClientes();
+
+if(window.LS_TOAST) LS_TOAST.success("Cliente salvo e lista atualizada");
 
 }
 

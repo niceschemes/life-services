@@ -36,36 +36,44 @@
   }
 
   async function salvar() {
-    const clienteNome = document.getElementById('orcCliente').value.trim();
-    const desc = document.getElementById('orcItemDesc').value.trim();
-    const qtd = Number(document.getElementById('orcItemQtd').value) || 1;
-    const unit = Number(document.getElementById('orcItemValor').value) || 0;
+    try {
+      const clienteNome = document.getElementById('orcCliente').value.trim();
+      const desc = document.getElementById('orcItemDesc').value.trim();
+      const qtd = Number(document.getElementById('orcItemQtd').value) || 1;
+      const unit = Number(document.getElementById('orcItemValor').value) || 0;
 
-    if (!clienteNome || !desc) {
-      global.LS_TOAST.warning('Preencha cliente e item');
-      return;
+      if (!clienteNome || !desc) {
+        global.LS_TOAST.warning('Preencha cliente e item');
+        return;
+      }
+
+      const body = {
+        clienteNome,
+        clienteEmail: document.getElementById('orcEmail').value.trim(),
+        clienteTelefone: document.getElementById('orcTelefone').value.trim(),
+        itens: [{ descricao: desc, quantidade: qtd, valorUnitario: unit, desconto: 0 }],
+        observacoes: document.getElementById('orcObs').value.trim(),
+        validade: document.getElementById('orcValidade').value ? new Date(document.getElementById('orcValidade').value) : undefined
+      };
+
+      const res = await global.LS_API.fetchAuth(base(), {
+        method: 'POST',
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erro ao salvar');
+
+      cache.unshift(data);
+      renderLista();
+
+      global.LS_TOAST.success('Orçamento ' + data.codigo + ' criado');
+      document.getElementById('orcItemDesc').value = '';
+      document.getElementById('orcItemValor').value = '';
+      document.getElementById('orcObs').value = '';
+      await carregar();
+    } catch (e) {
+      global.LS_TOAST.error(e.message);
     }
-
-    const body = {
-      clienteNome,
-      clienteEmail: document.getElementById('orcEmail').value.trim(),
-      clienteTelefone: document.getElementById('orcTelefone').value.trim(),
-      itens: [{ descricao: desc, quantidade: qtd, valorUnitario: unit, desconto: 0 }],
-      observacoes: document.getElementById('orcObs').value.trim(),
-      validade: document.getElementById('orcValidade').value ? new Date(document.getElementById('orcValidade').value) : undefined
-    };
-
-    const res = await global.LS_API.fetchAuth(base(), {
-      method: 'POST',
-      body: JSON.stringify(body)
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Erro ao salvar');
-
-    global.LS_TOAST.success('Orçamento ' + data.codigo + ' criado');
-    document.getElementById('orcItemDesc').value = '';
-    document.getElementById('orcItemValor').value = '';
-    await carregar();
   }
 
   async function acao(id, path, msg) {

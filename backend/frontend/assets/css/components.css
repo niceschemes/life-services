@@ -298,8 +298,8 @@ body.ls-enterprise .table tr:hover td {
 
 .theme-orb {
   margin-left: auto;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 50%;
   background:
@@ -309,10 +309,10 @@ body.ls-enterprise .table tr:hover td {
   display: grid;
   place-items: center;
   flex: 0 0 auto;
-  font-size: 21px;
+  font-size: 18px;
   line-height: 1;
   cursor: pointer;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.24);
   transition: transform 0.2s ease, box-shadow 0.2s ease, rotate 0.35s ease;
 }
 
@@ -330,9 +330,9 @@ body.light .theme-orb {
 
 body.ls-enterprise .sidebar.ls-sidebar.collapsed .theme-orb {
   display: grid !important;
-  margin: 14px auto 0;
-  width: 34px;
-  height: 34px;
+  margin: 10px auto 0;
+  width: 32px;
+  height: 32px;
 }
 
 body.ls-enterprise .sidebar.ls-sidebar.collapsed {
@@ -531,6 +531,7 @@ body.light .module-card {
   body.ls-enterprise .sidebar.ls-sidebar .logo {
     margin-bottom: 12px;
     min-width: 100%;
+    gap: 10px;
   }
 
   body.ls-enterprise .sidebar.ls-sidebar.collapsed .logo span,

@@ -28,12 +28,12 @@
     tbody.innerHTML = produtos.map(function (p) {
       const baixo = p.estoqueAtual <= p.estoqueMinimo;
       return '<tr class="' + (baixo ? 'estoque-baixo' : '') + '">' +
-        '<td>' + (p.nome || '') + '<br><small>' + (p.sku || '') + '</small></td>' +
-        '<td>' + p.estoqueAtual + ' ' + (p.unidade || 'UN') + '</td>' +
-        '<td>' + p.estoqueMinimo + '</td>' +
-        '<td>R$ ' + Number(p.custoMedio || 0).toFixed(2) + '</td>' +
-        '<td>R$ ' + Number(p.precoVenda || 0).toFixed(2) + '</td>' +
-        '<td class="actions">' +
+        '<td data-label="Produto">' + (p.nome || '') + '<br><small>' + (p.sku || '') + '</small></td>' +
+        '<td data-label="Estoque">' + p.estoqueAtual + ' ' + (p.unidade || 'UN') + '</td>' +
+        '<td data-label="Mín.">' + p.estoqueMinimo + '</td>' +
+        '<td data-label="Custo">R$ ' + Number(p.custoMedio || 0).toFixed(2) + '</td>' +
+        '<td data-label="Preço">R$ ' + Number(p.precoVenda || 0).toFixed(2) + '</td>' +
+        '<td data-label="Ações" class="actions">' +
         '<button class="btn btn-success" onclick="LS_ESTOQUE.mov(\'' + p._id + '\',\'entrada\')">+ Entrada</button> ' +
         '<button class="btn btn-warning" onclick="LS_ESTOQUE.mov(\'' + p._id + '\',\'saida\')">- Saída</button>' +
         '</td></tr>';

@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
 <link rel="stylesheet" href="/assets/css/design-system.css">
-<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/components.css?v=7">
 
 <style>
 
@@ -722,16 +722,22 @@ id="ordensAtrasadas"
 <div class="card">
 <h2>Novo orçamento</h2>
 <div class="form-grid">
-<input id="orcCliente" placeholder="Nome do cliente *">
+<input id="orcCliente" list="clientesOptions" placeholder="Nome do cliente *">
 <input id="orcEmail" placeholder="E-mail">
 <input id="orcTelefone" placeholder="Telefone">
 <input id="orcValidade" type="date" placeholder="Validade">
 </div>
 <br>
-<div class="form-grid">
-<input id="orcItemDesc" placeholder="Descrição do item *">
-<input id="orcItemQtd" type="number" value="1" placeholder="Qtd">
-<input id="orcItemValor" type="number" placeholder="Valor unitário *">
+<div class="budget-builder">
+<div class="budget-builder-head">
+<strong>Itens do orçamento</strong>
+<button class="btn btn-warning" type="button" onclick="LS_ORCAMENTOS.adicionarItem()">+ Adicionar item</button>
+</div>
+<div id="orcItens" class="budget-items"></div>
+<div class="budget-total">
+<span>Total estimado</span>
+<strong id="orcTotalPreview">R$ 0,00</strong>
+</div>
 </div>
 <textarea id="orcObs" rows="2" placeholder="Observações"></textarea>
 <br>
@@ -858,6 +864,7 @@ Salvar Cliente
 
 <input
 id="osCliente"
+list="clientesOptions"
 placeholder="Cliente"
 >
 
@@ -951,6 +958,8 @@ oninput="carregarOrdens()"
 
 </section>
 
+<datalist id="clientesOptions"></datalist>
+
 <!-- FINANCEIRO -->
 
 <section id="financeiro" class="section">
@@ -1040,6 +1049,7 @@ placeholder="Quantidade"
 type="number"
 min="1"
 value="1"
+oninput="atualizarPreviewFinanceiro()"
 >
 
 <input
@@ -1047,8 +1057,15 @@ id="finValorUnitario"
 placeholder="Valor unitário"
 type="number"
 step="0.01"
+oninput="atualizarPreviewFinanceiro()"
 >
 
+</div>
+
+<div class="finance-preview">
+<span>Total calculado</span>
+<strong id="finTotalPreview">R$ 0,00</strong>
+<small>Quantidade x valor unitário</small>
 </div>
 
 <br>
@@ -1293,9 +1310,9 @@ Gerar PDF
 <script src="/assets/js/core/realtime.js"></script>
 <script src="/assets/js/modules/notifications.js"></script>
 <script src="/assets/js/modules/chat.js"></script>
-<script src="/assets/js/modules/orcamentos.js?v=4"></script>
+<script src="/assets/js/modules/orcamentos.js?v=5"></script>
 <script src="/assets/js/modules/crm.js"></script>
-<script src="/assets/js/modules/estoque.js"></script>
+<script src="/assets/js/modules/estoque.js?v=2"></script>
 <script src="/assets/js/modules/fase4.js"></script>
 
 <script>
@@ -1615,6 +1632,21 @@ document.getElementById(
 "totalClientes"
 ).innerText = clientes.length;
 
+const sugestoesClientes =
+document.getElementById("clientesOptions");
+
+if(sugestoesClientes){
+
+sugestoesClientes.innerHTML =
+clientes.map(c=>`
+<option
+value="${textoSeguro(c.nome)}"
+label="${textoSeguro(c.telefone || c.endereco || "")}"
+></option>
+`).join("");
+
+}
+
 const lista =
 document.getElementById(
 "listaClientes"
@@ -1628,13 +1660,13 @@ lista.innerHTML += `
 
 <tr>
 
-<td>${c.nome}<br><small style="color:var(--muted)">${c._id}</small></td>
+<td data-label="Nome">${c.nome}<br><small style="color:var(--muted)">${c._id}</small></td>
 
-<td>${c.telefone}</td>
+<td data-label="Telefone">${c.telefone}</td>
 
-<td>${c.endereco}</td>
+<td data-label="Endereço">${c.endereco}</td>
 
-<td>
+<td data-label="Ações">
 
 <div class="actions">
 
@@ -2120,7 +2152,7 @@ lista.innerHTML += `
 
 <tr>
 
-<td>
+<td data-label="Cliente">
 <b>${o.cliente}</b>
 <br>
 <span class="priority ${prioridadeClasse(o.prioridade)}">
@@ -2133,7 +2165,7 @@ ${textoSeguro(o.prioridade || "Media")}
 </div>
 </td>
 
-<td>
+<td data-label="Descrição">
 ${textoSeguro(o.descricao)}
 <div class="detail-grid">
 <div>
@@ -2143,11 +2175,11 @@ ${textoSeguro(o.descricao)}
 </div>
 </td>
 
-<td>
+<td data-label="Valor">
 ${moeda(o.valor)}
 </td>
 
-<td>
+<td data-label="Status">
 
 <span style="
 background:${corStatus};
@@ -2162,7 +2194,7 @@ ${o.status}
 
 </td>
 
-<td>
+<td data-label="Ações">
 
 <div class="actions">
 
@@ -2510,6 +2542,28 @@ carregarOrdens();
 
 /* FINANCEIRO */
 
+function atualizarPreviewFinanceiro(){
+
+const quantidade =
+Number(document.getElementById("finQuantidade")?.value) || 0;
+
+const valorUnitario =
+Number(document.getElementById("finValorUnitario")?.value) || 0;
+
+const total =
+quantidade * valorUnitario;
+
+const preview =
+document.getElementById("finTotalPreview");
+
+if(preview){
+
+preview.innerText = moeda(total);
+
+}
+
+}
+
 async function salvarFinanceiro(){
 
 const tipo =
@@ -2568,6 +2622,7 @@ document.getElementById(
 
 document.getElementById("finQuantidade").value = "1";
 document.getElementById("finValorUnitario").value = "";
+atualizarPreviewFinanceiro();
 
 await carregarFinanceiro();
 
@@ -2607,32 +2662,32 @@ lista.innerHTML += `
 
 <tr>
 
-<td>${item.tipo}</td>
+<td data-label="Tipo">${item.tipo}</td>
 
-<td>${item.descricao}</td>
+<td data-label="Descrição">${item.descricao}</td>
 
-<td>
+<td data-label="Item">
 ${textoSeguro(item.item || item.descricao)}
 </td>
 
-<td>
+<td data-label="Qtd">
 ${Number(item.quantidade || 1)}
 </td>
 
-<td>
-R$ ${Number(item.valorUnitario || item.valor || 0).toFixed(2)}
+<td data-label="Unitário">
+${moeda(item.valorUnitario || item.valor || 0)}
 </td>
 
-<td>
-R$ ${Number(item.valor).toFixed(2)}
+<td data-label="Valor">
+${moeda(item.valor)}
 </td>
 
-<td>
+<td data-label="Data">
 ${new Date(item.data)
 .toLocaleDateString("pt-BR")}
 </td>
 
-<td>
+<td data-label="Ações">
 
 <button
 class="btn btn-danger"

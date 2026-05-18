@@ -66,6 +66,7 @@ async function generateOrcamentoPdf(orcamento, company) {
 
   // Header compacto para manter tudo em uma página.
   doc.rect(0, 0, pageWidth, 86).fill(primary);
+  doc.rect(0, 82, pageWidth, 4).fill('#0f172a');
   doc.fillColor('#ffffff').font('Helvetica-Bold').fontSize(20);
   doc.text(company?.nome || 'Life Services', left, 22, { width: 270 });
   doc.font('Helvetica').fontSize(8.5);
@@ -79,10 +80,14 @@ async function generateOrcamentoPdf(orcamento, company) {
   doc.font('Helvetica').fontSize(9);
   doc.text(orcamento.codigo || String(orcamento._id).slice(-8), 365, 46, { width: 185, align: 'right' });
   doc.text(`Emissão: ${today}`, 365, 60, { width: 185, align: 'right' });
+  doc.roundedRect(414, 70, 136, 18, 9).fill('#ffffff');
+  doc.fillColor(primary).font('Helvetica-Bold').fontSize(7.5);
+  doc.text('PROPOSTA COMERCIAL', 420, 75, { width: 124, align: 'center' });
 
   // Dados principais.
   let y = 108;
   doc.roundedRect(left, y, width, 78, 10).strokeColor('#e2e8f0').lineWidth(1).stroke();
+  doc.roundedRect(left, y, 5, 78, 2).fill(primary);
   doc.fillColor('#0f172a').font('Helvetica-Bold').fontSize(10);
   doc.text('Dados do cliente', left + 14, y + 12);
   doc.font('Helvetica').fontSize(9).fillColor('#334155');
@@ -103,7 +108,7 @@ async function generateOrcamentoPdf(orcamento, company) {
   doc.text('Itens do orçamento', left, y);
   y += 18;
 
-  doc.rect(left, y, width, 22).fill('#f1f5f9');
+  doc.roundedRect(left, y, width, 22, 6).fill('#f1f5f9');
   doc.fillColor('#0f172a').font('Helvetica-Bold').fontSize(8.5);
   doc.text('Descrição', left + 8, y + 7, { width: 260 });
   doc.text('Qtd', left + 318, y + 7, { width: 38, align: 'center' });
@@ -142,14 +147,15 @@ async function generateOrcamentoPdf(orcamento, company) {
   y += 12;
   const totalsX = right - 210;
   doc.roundedRect(totalsX, y, 210, 76, 10).fill('#f8fafc').strokeColor('#e2e8f0').stroke();
+  doc.roundedRect(totalsX, y + 48, 210, 28, 10).fill(primary);
   doc.fillColor('#334155').font('Helvetica').fontSize(9);
   doc.text('Subtotal', totalsX + 12, y + 13);
   doc.text(formatMoney(orcamento.subtotal), totalsX + 105, y + 13, { width: 90, align: 'right' });
   doc.text('Descontos', totalsX + 12, y + 31);
   doc.text(formatMoney(orcamento.descontoTotal), totalsX + 105, y + 31, { width: 90, align: 'right' });
-  doc.font('Helvetica-Bold').fontSize(14).fillColor(primary);
-  doc.text('TOTAL', totalsX + 12, y + 51);
-  doc.text(formatMoney(orcamento.total), totalsX + 105, y + 51, { width: 90, align: 'right' });
+  doc.font('Helvetica-Bold').fontSize(14).fillColor('#ffffff');
+  doc.text('TOTAL', totalsX + 12, y + 55);
+  doc.text(formatMoney(orcamento.total), totalsX + 105, y + 55, { width: 90, align: 'right' });
 
   // Observações e condições.
   const obsY = y;
@@ -169,11 +175,23 @@ async function generateOrcamentoPdf(orcamento, company) {
     height: 36
   });
 
+  if (obsY < 470) {
+    doc.font('Helvetica-Bold').fillColor('#0f172a').fontSize(9);
+    doc.text('Aceite', left, obsY + 112);
+    doc.font('Helvetica').fillColor('#64748b').fontSize(7.5);
+    doc.text('A aprovação deste orçamento pode ser registrada por assinatura, confirmação digital ou aceite formal do cliente.', left, obsY + 126, {
+      width: obsWidth,
+      height: 24
+    });
+  }
+
   // Assinatura e validação.
   y = 610;
   doc.strokeColor('#cbd5e1').moveTo(left, y + 38).lineTo(left + 215, y + 38).stroke();
   doc.fillColor('#64748b').font('Helvetica').fontSize(8);
   doc.text('Assinatura / aceite do cliente', left, y + 44, { width: 215, align: 'center' });
+  doc.font('Helvetica-Bold').fontSize(8).fillColor('#0f172a');
+  doc.text('Validação digital', right - 150, y - 12, { width: 140, align: 'right' });
 
   try {
     const qrUrl = await QRCode.toDataURL(`https://life.services/validar/${codigoVal}`);

@@ -5,7 +5,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Life Services</title>
+<title>Life Services Enterprise</title>
+
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/assets/icons/icon.svg">
+<meta name="theme-color" content="#6366f1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<link rel="stylesheet" href="/assets/css/design-system.css">
+<link rel="stylesheet" href="/assets/css/components.css">
 
 <style>
 
@@ -126,6 +134,23 @@ body{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
   gap:12px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.field label{
+  color:var(--muted);
+  font-size:13px;
+  font-weight:bold;
+}
+
+.field small{
+  color:var(--muted);
+  font-size:12px;
 }
 
 .toolbar{
@@ -332,18 +357,20 @@ button{
 
 </head>
 
-<body>
+<body class="ls-enterprise">
+
+<div class="ls-loading-overlay" id="lsLoading"><div class="ls-spinner"></div></div>
 
 <!-- LOGIN -->
 
 <div class="login-screen" id="loginBox">
 
-  <div class="login-card">
+  <div class="login-card ls-glass">
 
     <h1>Life Services</h1>
 
     <p>
-      Sistema inteligente empresarial
+      ERP/SaaS empresarial — Computação em Nuvem
     </p>
 
     <input
@@ -386,45 +413,90 @@ button{
 
 <!-- SIDEBAR -->
 
-<aside class="sidebar">
+<aside class="sidebar ls-sidebar" id="lsSidebar">
 
 <div class="logo">
-Life Services
+<div class="logo-mark">LS</div>
+<span class="menu-label">Life Services</span>
 </div>
+
+<button type="button" class="btn" id="ls-toggle-sidebar" style="margin-bottom:16px;width:100%;">☰ Menu</button>
 
 <button
 class="menu-btn active"
 onclick="abrirSecao('dashboard',this)"
 >
-Dashboard
+<span class="menu-label">Dashboard</span>
 </button>
 
 <button
 class="menu-btn"
 onclick="abrirSecao('clientes',this)"
 >
-Clientes
+<span class="menu-label">Clientes</span>
+</button>
+
+<button
+class="menu-btn"
+onclick="abrirSecao('crm',this)"
+>
+<span class="menu-label">CRM</span>
+</button>
+
+<button
+class="menu-btn"
+onclick="abrirSecao('orcamentos',this)"
+>
+<span class="menu-label">Orçamentos</span>
+</button>
+
+<button
+class="menu-btn"
+onclick="abrirSecao('estoque',this)"
+>
+<span class="menu-label">Estoque</span>
 </button>
 
 <button
 class="menu-btn"
 onclick="abrirSecao('ordens',this)"
 >
-Ordens
+<span class="menu-label">Ordens</span>
+</button>
+
+<button
+class="menu-btn"
+onclick="abrirSecao('kanban',this)"
+>
+<span class="menu-label">Kanban</span>
 </button>
 
 <button
 class="menu-btn"
 onclick="abrirSecao('financeiro',this)"
 >
-Financeiro
+<span class="menu-label">Financeiro</span>
+</button>
+
+<button
+class="menu-btn"
+onclick="abrirSecao('ia',this)"
+>
+<span class="menu-label">IA Assistente</span>
+</button>
+
+<button
+class="menu-btn"
+onclick="abrirSecao('chat',this)"
+>
+<span class="menu-label">Chat</span>
 </button>
 
 <button
 class="menu-btn"
 onclick="abrirSecao('agenda',this)"
 >
-Agenda
+<span class="menu-label">Agenda</span>
 </button>
 
 <button
@@ -464,6 +536,25 @@ Sair
 <!-- DASHBOARD -->
 
 <section id="dashboard" class="section active">
+
+<div class="topbar-enterprise">
+<input class="search-pill" placeholder="Buscar clientes, ordens, relatórios..." disabled>
+<div class="notif-bell" title="Notificações" onclick="LS_NOTIFICATIONS.togglePainel()">🔔<span class="dot"></span></div>
+</div>
+
+<div id="pwaBanner" class="pwa-banner">
+<span>Instale o Life Services como app</span>
+<button class="btn btn-primary" type="button" style="width:auto;" onclick="instalarPWA()">Instalar</button>
+<button class="btn" type="button" style="width:auto;" onclick="document.getElementById('pwaBanner').classList.remove('show')">×</button>
+</div>
+
+<div id="notifPanel" class="notif-panel">
+<div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+<strong>Notificações <span id="notifCount">0</span></strong>
+<button class="btn" type="button" style="width:auto;padding:6px 12px;" onclick="LS_NOTIFICATIONS.marcarTodas()">Marcar lidas</button>
+</div>
+<div id="notifPanelList"></div>
+</div>
 
 <div class="stats">
 
@@ -554,6 +645,125 @@ id="ordensAtrasadas"
 
 </section>
 
+<!-- KANBAN -->
+
+<section id="kanban" class="section">
+<div class="card">
+<h2>Kanban operacional</h2>
+<p style="color:var(--muted);margin:12px 0;">Arraste os cards entre colunas para atualizar o status (estilo Monday / ClickUp).</p>
+<div id="kanbanBoard" class="ls-kanban"></div>
+</div>
+</section>
+
+<!-- IA -->
+
+<section id="ia" class="section">
+<div class="card ls-ai-panel">
+<h2>Assistente IA</h2>
+<p style="color:var(--muted);margin-bottom:12px;">Análise operacional, sugestões e previsões (módulo preparado para LLM).</p>
+<textarea id="iaPrompt" rows="3" placeholder="Ex: Quais ordens priorizar hoje?"></textarea>
+<br><br>
+<button class="btn btn-primary" type="button" onclick="LS_ENTERPRISE.runAssistant()">Analisar com IA</button>
+<div id="iaOutput" style="margin-top:16px;"></div>
+</div>
+</section>
+
+<!-- CHAT -->
+
+<section id="chat" class="section">
+<div class="card">
+<h2>Chat interno da equipe</h2>
+<p style="color:var(--muted);margin-bottom:12px;">Mensagens em tempo real via WebSocket.</p>
+<div id="chatMessages" class="chat-messages"></div>
+<div class="chat-input-row">
+<input id="chatInput" placeholder="Digite uma mensagem..." onkeypress="if(event.key==='Enter')LS_CHAT.enviar()">
+<button class="btn btn-primary" type="button" style="width:auto;" onclick="LS_CHAT.enviar()">Enviar</button>
+</div>
+</div>
+</section>
+
+<!-- CRM -->
+
+<section id="crm" class="section">
+<div class="card">
+<h2>CRM — Funil comercial</h2>
+<p style="color:var(--muted);margin:12px 0;">Arraste clientes entre etapas (Lead → Ganho).</p>
+<div id="crmPipeline" class="ls-kanban"></div>
+</div>
+<div class="card" style="margin-top:16px;">
+<h3>Follow-up rápido</h3>
+<div class="form-grid">
+<input id="crmFollowClienteId" placeholder="ID do cliente (cole da lista de clientes)">
+<input id="crmFollowNota" placeholder="Nota do follow-up">
+</div>
+<br>
+<button class="btn btn-primary" type="button" onclick="LS_CRM.followUp()">Registrar follow-up</button>
+</div>
+</section>
+
+<!-- ORÇAMENTOS -->
+
+<section id="orcamentos" class="section">
+<div class="card">
+<h2>Novo orçamento</h2>
+<div class="form-grid">
+<input id="orcCliente" placeholder="Nome do cliente *">
+<input id="orcEmail" placeholder="E-mail">
+<input id="orcTelefone" placeholder="Telefone">
+<input id="orcValidade" type="date" placeholder="Validade">
+</div>
+<br>
+<div class="form-grid">
+<input id="orcItemDesc" placeholder="Descrição do item *">
+<input id="orcItemQtd" type="number" value="1" placeholder="Qtd">
+<input id="orcItemValor" type="number" placeholder="Valor unitário *">
+</div>
+<textarea id="orcObs" rows="2" placeholder="Observações"></textarea>
+<br>
+<button class="btn btn-primary" type="button" onclick="LS_ORCAMENTOS.salvar()">Criar orçamento</button>
+</div>
+<div class="card">
+<h2>Orçamentos</h2>
+<table class="table">
+<thead><tr><th>Código</th><th>Cliente</th><th>Status</th><th>Total</th><th>Ações</th></tr></thead>
+<tbody id="listaOrcamentos"></tbody>
+</table>
+</div>
+</section>
+
+<!-- ESTOQUE -->
+
+<section id="estoque" class="section">
+<div class="card">
+<h2>Cadastrar produto</h2>
+<div class="form-grid">
+<input id="estNome" placeholder="Nome *">
+<input id="estSku" placeholder="SKU">
+<input id="estQtd" type="number" placeholder="Estoque atual">
+<input id="estMin" type="number" placeholder="Estoque mínimo">
+<input id="estCusto" type="number" step="0.01" placeholder="Custo médio">
+<input id="estPreco" type="number" step="0.01" placeholder="Preço venda">
+</div>
+<br>
+<button class="btn btn-primary" type="button" onclick="LS_ESTOQUE.salvarProduto()">Salvar produto</button>
+</div>
+<div class="card">
+<h2>Alertas</h2>
+<div id="estoqueAlertas" class="mini-list"></div>
+</div>
+<div class="card">
+<h2>Produtos</h2>
+<table class="table">
+<thead><tr><th>Produto</th><th>Estoque</th><th>Mín.</th><th>Custo</th><th>Preço</th><th>Ações</th></tr></thead>
+<tbody id="listaEstoque"></tbody>
+</table>
+</div>
+<div class="card">
+<h2>Últimas movimentações</h2>
+<div id="listaMovimentacoes" class="mini-list"></div>
+</div>
+</section>
+
 <!-- CLIENTES -->
 
 <section id="clientes" class="section">
@@ -615,6 +825,18 @@ Salvar Cliente
 
 </table>
 
+</div>
+
+<div class="card">
+<h2>Portal do cliente</h2>
+<p style="color:var(--muted);font-size:13px;margin-bottom:12px;">Ative o acesso em <a href="/portal" target="_blank">/portal</a>. Cole o ID do cliente da tabela (inspecionar ou após salvar).</p>
+<div class="form-grid">
+<input id="portalClienteId" placeholder="ID do cliente (MongoDB _id)">
+<input id="portalEmailAtivar" placeholder="E-mail de login">
+<input id="portalSenhaAtivar" type="password" placeholder="Senha inicial">
+</div>
+<br>
+<button class="btn btn-success" type="button" onclick="ativarPortalCliente()">Ativar portal</button>
 </div>
 
 </section>
@@ -1019,10 +1241,26 @@ Gerar PDF
 
 </div>
 
+<script src="/assets/js/core/config.js"></script>
+<script src="/assets/js/core/toast.js"></script>
+<script src="/assets/js/core/theme.js"></script>
+<script src="/assets/js/core/api.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/assets/js/core/enterprise.js"></script>
+<script src="/assets/js/core/realtime.js"></script>
+<script src="/assets/js/modules/notifications.js"></script>
+<script src="/assets/js/modules/chat.js"></script>
+<script src="/assets/js/modules/orcamentos.js"></script>
+<script src="/assets/js/modules/crm.js"></script>
+<script src="/assets/js/modules/estoque.js"></script>
+
 <script>
 
-const BASE =
-"https://life-services-wiq6.onrender.com";
+const BASE = (window.LS_CONFIG && LS_CONFIG.apiBase) || (
+  /localhost|127\.0\.0\.1/.test(location.origin)
+    ? location.origin
+    : "https://life-services-wiq6.onrender.com"
+);
 
 const API_CLIENTES =
 BASE + "/clientes";
@@ -1060,25 +1298,37 @@ document
 
 btn.classList.add("active");
 
+if(secao === "orcamentos" && window.LS_ORCAMENTOS) LS_ORCAMENTOS.carregar();
+if(secao === "crm" && window.LS_CRM) LS_CRM.carregar();
+if(secao === "estoque" && window.LS_ESTOQUE) LS_ESTOQUE.carregar();
+if(secao === "chat" && window.LS_CHAT) LS_CHAT.carregar();
+
+}
+
+async function baixarPdfOS(id){
+if(!window.LS_API) return;
+try{
+const res = await LS_API.fetchAuth(BASE + "/ordens/" + id + "/pdf");
+const blob = await res.blob();
+const url = URL.createObjectURL(blob);
+window.open(url, "_blank");
+}catch(e){
+if(window.LS_TOAST) LS_TOAST.error("Erro ao gerar PDF da OS");
+}
 }
 
 function alternarTema(){
-
+if(window.LS_THEME){ LS_THEME.toggle(); return; }
 document.body.classList.toggle("light");
-
-localStorage.setItem(
-"tema",
-document.body.classList.contains("light") ? "light" : "dark"
-);
-
+localStorage.setItem("tema", document.body.classList.contains("light") ? "light" : "dark");
 }
 
 function aplicarTema(){
-
+if(window.LS_THEME){ LS_THEME.apply(); return; }
 if(localStorage.getItem("tema") === "light"){
 document.body.classList.add("light");
 }
-
+document.body.classList.add("ls-enterprise");
 }
 
 /* LOGIN */
@@ -1108,6 +1358,9 @@ carregarClientes();
 carregarOrdens();
 
 carregarFinanceiro();
+
+if(window.LS_REALTIME) LS_REALTIME.connect();
+if(window.LS_NOTIFICATIONS) LS_NOTIFICATIONS.carregar();
 
 }
 
@@ -1140,16 +1393,17 @@ const data = await res.json();
 
 if(data.token){
 
-localStorage.setItem(
-"token",
-data.token
-);
+localStorage.setItem("token", data.token);
+if(data.user) localStorage.setItem("ls_user", JSON.stringify(data.user));
+if(data.company) localStorage.setItem("ls_company", JSON.stringify(data.company));
+if(window.LS_TOAST) LS_TOAST.success("Bem-vindo ao Life Services Enterprise");
 
 location.reload();
 
 }else{
 
-alert("Login inválido");
+if(window.LS_TOAST) LS_TOAST.error(data.error || "Login inválido");
+else alert("Login inválido");
 
 }
 
@@ -1244,7 +1498,7 @@ lista.innerHTML += `
 
 <tr>
 
-<td>${c.nome}</td>
+<td>${c.nome}<br><small style="color:var(--muted)">${c._id}</small></td>
 
 <td>${c.telefone}</td>
 
@@ -1872,6 +2126,13 @@ Editar
 </button>
 
 <button
+class="btn btn-primary"
+onclick="baixarPdfOS('${o._id}')"
+>
+PDF
+</button>
+
+<button
 class="btn btn-danger"
 onclick="deletarOS('${o._id}')"
 >
@@ -1910,6 +2171,11 @@ atrasadas;
 renderizarNotificacoes(ordens);
 renderizarAgenda(cacheOrdens);
 renderizarRelatorio(cacheOrdens);
+
+if(window.LS_ENTERPRISE){
+LS_ENTERPRISE.renderKanban(cacheOrdens);
+LS_ENTERPRISE.loadExecutiveDashboard();
+}
 
 }
 
@@ -2326,9 +2592,51 @@ carregarFinanceiro();
 
 }
 
+async function ativarPortalCliente(){
+const id = document.getElementById("portalClienteId").value.trim();
+const email = document.getElementById("portalEmailAtivar").value.trim();
+const senha = document.getElementById("portalSenhaAtivar").value.trim();
+if(!id || !email || !senha){
+if(window.LS_TOAST) LS_TOAST.warning("Preencha ID, e-mail e senha");
+return;
+}
+const res = await fetchAuth(BASE + "/portal/admin/ativar",{
+method:"POST",
+body:JSON.stringify({ clienteId:id, email, senha })
+});
+const data = await res.json();
+if(res.ok){
+if(window.LS_TOAST) LS_TOAST.success("Portal ativado: " + (data.portalEmail || email));
+}else{
+if(window.LS_TOAST) LS_TOAST.error(data.error || "Erro ao ativar");
+}
+}
+
+let deferredPwaPrompt;
+window.addEventListener("beforeinstallprompt", function(e){
+e.preventDefault();
+deferredPwaPrompt = e;
+const banner = document.getElementById("pwaBanner");
+if(banner) banner.classList.add("show");
+});
+
+function instalarPWA(){
+if(deferredPwaPrompt){
+deferredPwaPrompt.prompt();
+deferredPwaPrompt.userChoice.then(function(){
+deferredPwaPrompt = null;
+});
+}
+}
+
+if("serviceWorker" in navigator){
+navigator.serviceWorker.register("/sw.js").catch(function(){});
+}
+
 /* START */
 
 aplicarTema();
+if(window.LS_THEME) LS_THEME.initSidebar();
 iniciarAssinatura();
 checarLogin();
 

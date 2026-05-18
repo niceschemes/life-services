@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#6366f1">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/assets/icons/icon.svg">
+  <title>Portal do Cliente — Life Services</title>
+  <link rel="stylesheet" href="/assets/css/design-system.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <style>
+    body { min-height: 100vh; padding: 24px; }
+    .portal-login { min-height: 80vh; display: grid; place-items: center; }
+    .portal-login .card { width: 100%; max-width: 420px; padding: 32px; }
+    .portal-app { display: none; max-width: 900px; margin: 0 auto; }
+    .portal-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .portal-nav button { padding: 10px 16px; border-radius: 12px; border: 1px solid var(--ls-border); background: var(--ls-card); color: var(--ls-text); cursor: pointer; }
+    .portal-nav button.active { background: var(--ls-gradient); color: white; border: none; }
+    .portal-tab { display: none; }
+    .portal-tab.active { display: block; }
+    .portal-card { padding: 16px; border: 1px solid var(--ls-border); border-radius: 14px; margin-bottom: 12px; background: var(--ls-card); }
+    input, textarea, button.btn { width: 100%; margin-bottom: 10px; padding: 12px; border-radius: 12px; border: 1px solid var(--ls-border); background: var(--ls-card); color: var(--ls-text); }
+    button.btn { background: var(--ls-gradient); border: none; color: white; font-weight: 700; cursor: pointer; }
+    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  </style>
+</head>
+<body class="ls-enterprise">
+
+<div id="portalLogin" class="portal-login">
+  <div class="card">
+    <span class="badge" style="display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(99,102,241,0.2);margin-bottom:12px;">Portal do Cliente</span>
+    <h1>Life Services</h1>
+    <p style="color:var(--ls-muted);margin-bottom:20px;">Acompanhe ordens, orçamentos e chamados.</p>
+    <input id="portalEmail" type="email" placeholder="E-mail do portal">
+    <input id="portalSenha" type="password" placeholder="Senha" onkeypress="if(event.key==='Enter')PORTAL.login()">
+    <button class="btn" type="button" onclick="PORTAL.login()">Entrar</button>
+    <p style="margin-top:16px;font-size:13px;"><a href="/" style="color:var(--ls-primary);">Painel administrativo</a></p>
+  </div>
+</div>
+
+<div id="portalApp" class="portal-app">
+  <div class="header-row">
+    <h1>Meu portal</h1>
+    <button class="btn" type="button" style="width:auto;padding:10px 20px;" onclick="PORTAL.logout()">Sair</button>
+  </div>
+
+  <nav class="portal-nav">
+    <button class="active" type="button" onclick="PORTAL.abrirTab('ordens',this)">Ordens</button>
+    <button type="button" onclick="PORTAL.abrirTab('orcamentos',this)">Orçamentos</button>
+    <button type="button" onclick="PORTAL.abrirTab('tickets',this)">Chamados</button>
+  </nav>
+
+  <section id="tab-ordens" class="portal-tab active">
+    <h2>Minhas ordens de serviço</h2>
+    <div id="portalOrdens"></div>
+  </section>
+
+  <section id="tab-orcamentos" class="portal-tab">
+    <h2>Orçamentos</h2>
+    <div id="portalOrcamentos"></div>
+  </section>
+
+  <section id="tab-tickets" class="portal-tab">
+    <h2>Chamados de suporte</h2>
+    <input id="ticketTitulo" placeholder="Título do chamado">
+    <textarea id="ticketDesc" rows="3" placeholder="Descreva o problema"></textarea>
+    <button class="btn" type="button" onclick="PORTAL.novoTicket()">Abrir chamado</button>
+    <hr style="margin:20px 0;border-color:var(--ls-border);">
+    <div id="portalTickets"></div>
+  </section>
+</div>
+
+<script src="/assets/js/core/config.js"></script>
+<script src="/assets/js/portal.js"></script>
+<script>PORTAL.init();</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(function () {});
+}
+</script>
+</body>
+</html>

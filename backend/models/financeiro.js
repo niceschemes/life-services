@@ -1,30 +1,16 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const FinanceiroSchema = new mongoose.Schema({
-
-  tipo:{
-    type:String,
-    required:true
-  },
-
-  descricao:{
-    type:String,
-    required:true
-  },
-
-  valor:{
-    type:Number,
-    required:true
-  },
-
-  data:{
-    type:Date,
-    default:Date.now
-  }
-
+  companyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', index: true },
+  tipo: { type: String, required: true },
+  descricao: { type: String, required: true },
+  valor: { type: Number, required: true },
+  categoria: { type: String, default: 'geral' },
+  centroCusto: { type: String, default: '' },
+  recorrente: { type: Boolean, default: false },
+  data: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model(
-  "Financeiro",
-  FinanceiroSchema
-);
+FinanceiroSchema.index({ companyId: 1, data: -1 });
+
+module.exports = mongoose.model('Financeiro', FinanceiroSchema);

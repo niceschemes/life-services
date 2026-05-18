@@ -1,0 +1,186 @@
+/* Life Services Enterprise — Design System */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --ls-font: 'DM Sans', system-ui, sans-serif;
+  --ls-mono: 'JetBrains Mono', monospace;
+
+  --ls-radius-sm: 8px;
+  --ls-radius: 14px;
+  --ls-radius-lg: 20px;
+  --ls-radius-xl: 28px;
+
+  --ls-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.12);
+  --ls-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+  --ls-shadow-glow: 0 0 0 1px rgba(99, 102, 241, 0.35), 0 20px 50px rgba(99, 102, 241, 0.15);
+
+  --ls-blur: blur(16px);
+  --ls-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+
+  --ls-primary: #6366f1;
+  --ls-primary-hover: #818cf8;
+  --ls-accent: #22d3ee;
+  --ls-success: #10b981;
+  --ls-warning: #f59e0b;
+  --ls-danger: #ef4444;
+
+  --ls-bg: #070b14;
+  --ls-bg-elevated: #0c1222;
+  --ls-sidebar: rgba(8, 12, 24, 0.92);
+  --ls-card: rgba(15, 23, 42, 0.72);
+  --ls-card-solid: #111827;
+  --ls-border: rgba(148, 163, 184, 0.12);
+  --ls-text: #f1f5f9;
+  --ls-muted: #94a3b8;
+  --ls-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 45%, #22d3ee 100%);
+  --ls-gradient-subtle: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, transparent 60%);
+}
+
+body.light.ls-enterprise,
+body.light {
+  --ls-bg: #f4f6fb;
+  --ls-bg-elevated: #ffffff;
+  --ls-sidebar: rgba(255, 255, 255, 0.94);
+  --ls-card: rgba(255, 255, 255, 0.9);
+  --ls-card-solid: #ffffff;
+  --ls-border: rgba(15, 23, 42, 0.1);
+  --ls-text: #0f172a;
+  --ls-muted: #64748b;
+  --ls-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+}
+
+body.ls-enterprise {
+  font-family: var(--ls-font);
+  background: var(--ls-bg);
+  color: var(--ls-text);
+  background-image: var(--ls-gradient-subtle);
+}
+
+body.ls-enterprise ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+body.ls-enterprise ::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.45);
+  border-radius: 99px;
+}
+
+body.ls-enterprise ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body.ls-enterprise .sidebar.ls-sidebar {
+  width: 272px;
+  background: var(--ls-sidebar);
+  backdrop-filter: var(--ls-blur);
+  border-right: 1px solid var(--ls-border);
+  transition: width var(--ls-transition);
+}
+
+body.ls-enterprise .sidebar.ls-sidebar.collapsed {
+  width: 84px;
+}
+
+body.ls-enterprise .sidebar.ls-sidebar.collapsed .logo span,
+body.ls-enterprise .sidebar.ls-sidebar.collapsed .menu-label {
+  display: none;
+}
+
+body.ls-enterprise .logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: var(--ls-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+body.ls-enterprise .logo-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--ls-gradient);
+  display: grid;
+  place-items: center;
+  color: white;
+  font-size: 14px;
+  -webkit-text-fill-color: white;
+  flex-shrink: 0;
+}
+
+body.ls-enterprise .card {
+  background: var(--ls-card);
+  backdrop-filter: var(--ls-blur);
+  border: 1px solid var(--ls-border);
+  border-radius: var(--ls-radius-lg);
+  box-shadow: var(--ls-shadow-sm);
+  transition: transform var(--ls-transition), box-shadow var(--ls-transition);
+}
+
+body.ls-enterprise .card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ls-shadow-glow);
+}
+
+body.ls-enterprise .stat-number {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+body.ls-enterprise .btn-primary {
+  background: var(--ls-gradient);
+  border: none;
+  transition: opacity var(--ls-transition), transform var(--ls-transition);
+}
+
+body.ls-enterprise .btn-primary:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+body.ls-enterprise .topbar-enterprise {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+body.ls-enterprise .topbar-enterprise .search-pill {
+  flex: 1;
+  min-width: 200px;
+  max-width: 420px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--ls-border);
+  background: var(--ls-card);
+  color: var(--ls-text);
+}
+
+body.ls-enterprise .notif-bell {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--ls-border);
+  background: var(--ls-card);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+body.ls-enterprise .notif-bell .dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background: var(--ls-danger);
+  border-radius: 50%;
+}
